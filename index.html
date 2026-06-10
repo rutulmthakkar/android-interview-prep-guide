@@ -201,16 +201,141 @@
     .qa { page-break-inside: avoid; }
     body { background: white; color: black; }
   }
+
+  /* ── TOC TOGGLE BUTTON (desktop) ── */
+  .toc-pin {
+    position: fixed; top: 16px; left: 16px; z-index: 100;
+    background: var(--bg-card); border: 1px solid var(--line);
+    color: var(--text-dim); width: 32px; height: 32px;
+    border-radius: 8px; cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s ease; box-shadow: var(--shadow);
+  }
+  .toc-pin:hover { background: var(--bg-elev); color: var(--accent); border-color: var(--accent); }
+
+  /* ── COLLAPSED STATE ── */
+  .container.toc-collapsed { grid-template-columns: 0 1fr; }
+  .container.toc-collapsed aside.toc {
+    width: 0; min-width: 0; padding: 0; overflow: hidden; border: none;
+  }
+
+  /* ── MOBILE OVERLAY ── */
+  .toc-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 15; backdrop-filter: blur(2px);
+  }
+  .toc-overlay.active { display: block; }
+
+  /* ── BACK TO TOP ── */
+  .back-top {
+    position: fixed; bottom: 24px; right: 20px; z-index: 50;
+    background: var(--accent); color: var(--bg); border: none;
+    width: 40px; height: 40px; border-radius: 50%; font-size: 18px;
+    cursor: pointer; box-shadow: var(--shadow); opacity: 0;
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .back-top.visible { opacity: 1; }
+  .back-top:hover { transform: translateY(-3px); }
+
+  /* ── MOBILE IMPROVEMENTS ── */
+  @media (max-width: 900px) {
+    .container { grid-template-columns: 1fr !important; }
+    aside.toc {
+      position: fixed; left: -100%; top: 0; width: min(320px, 85vw);
+      height: 100vh; z-index: 20;
+      transition: left 0.3s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: var(--shadow); padding: 20px 16px; overflow-y: auto;
+    }
+    aside.toc.open { left: 0 !important; }
+    .toc-pin { display: none; }
+    main.content { padding: 16px 14px 100px; }
+    .hero h1 { font-size: 28px; }
+    .hero-meta { flex-wrap: wrap; gap: 12px; }
+    .hero-meta span strong { font-size: 14px; }
+    .topic-header h2 { font-size: 20px; }
+    .qa-q { font-size: 14px; }
+    .qa-tags { display: none; }
+    .controls { padding: 10px 0; }
+    .stats { display: none; }
+    .search-row { gap: 6px; }
+    .search-box { font-size: 13px; padding: 9px 12px 9px 36px; }
+    .tag-row { gap: 4px; }
+    .tag-pill { font-size: 10px; padding: 4px 9px; }
+    /* Tables: horizontal scroll on mobile */
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; }
+    table thead, table tbody, table tr { display: table; width: 100%; table-layout: fixed; }
+    table { white-space: normal; }
+    .qa-body table { font-size: 12px; }
+    .qa-body table td, .qa-body table th { padding: 6px 8px; min-width: 80px; }
+    /* Code blocks */
+    .qa-body pre { font-size: 11.5px; padding: 10px 12px; }
+    /* Hero on mobile */
+    .hero { margin-bottom: 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 22px; }
+    .topic-header h2 { font-size: 18px; }
+    .menu-btn { padding: 8px 10px; font-size: 12px; }
+  }
+
+  /* ── MUST REVIEW SECTION ── */
+  .must-review {
+    background: linear-gradient(135deg, rgba(212,165,116,0.08) 0%, rgba(127,181,181,0.06) 100%);
+    border: 1px solid rgba(212,165,116,0.3); border-radius: 12px;
+    padding: 28px 32px; margin-bottom: 40px;
+  }
+  .must-review h2 { font-family: var(--serif); font-size: 26px; margin: 0 0 6px; color: var(--accent); }
+  .must-review .mr-sub { color: var(--text-mute); font-size: 13px; margin-bottom: 22px; }
+  .mr-tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .mr-tracks { grid-template-columns: 1fr; } }
+  .mr-track { background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+  .mr-track-title {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .mr-track-title.gold { color: var(--accent); }
+  .mr-track-title.teal { color: var(--accent-2); }
+  .mr-item { font-size: 13px; color: var(--text-dim); margin-bottom: 7px; display: flex; gap: 8px; align-items: flex-start; }
+  .mr-item a { color: var(--text); text-decoration: none; border-bottom: 1px dotted var(--text-mute); }
+  .mr-item a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .mr-badge {
+    font-family: var(--mono); font-size: 9px; padding: 2px 6px;
+    border-radius: 3px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .mr-badge.hot { background: rgba(229,132,122,0.2); color: var(--warn); }
+  .mr-badge.always { background: rgba(212,165,116,0.2); color: var(--accent); }
+  .mr-badge.deep { background: rgba(127,181,181,0.15); color: var(--accent-2); }
+
+  /* ── DSA PATTERN CARDS ── */
+  .pattern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+  @media (max-width: 700px) { .pattern-grid { grid-template-columns: 1fr; } }
+  .pattern-card {
+    background: var(--bg-elev); border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 14px; font-size: 13px;
+  }
+  .pattern-card strong { color: var(--accent); display: block; margin-bottom: 4px; }
+  .pattern-card em { color: var(--accent-2); font-style: normal; font-size: 11px; }
+  .pattern-card ul { margin: 6px 0 0; padding-left: 16px; color: var(--text-dim); }
+  .pattern-card li { margin-bottom: 2px; font-size: 12px; }
+
 </style>
 </head>
 <body>
-<div class="container">
+<div class="toc-overlay" id="tocOverlay"></div>
+<button class="toc-pin" id="tocPin" title="Toggle sidebar">◀</button>
+<button class="back-top" id="backTop" title="Back to top">↑</button>
+<div class="container" id="mainContainer">
 <!-- ============ TOC ============ -->
 <aside class="toc" id="toc">
 <div class="brand">Android SDE II<br/>Interview Refresher</div>
 <div class="brand-sub">For Rutul Thakkar</div>
 <div class="toc-title">Table of Contents</div>
 <ul>
+<li><a href="#must-review" style="color:var(--accent);font-weight:600">⚡ Must Review</a></li>
 <li><a href="#kotlin"><span class="num">01</span>Kotlin Essentials</a></li>
 <li><a href="#compose"><span class="num">02</span>Jetpack Compose</a></li>
 <li><a href="#coroutines"><span class="num">03</span>Coroutines &amp; Flow</a></li>
@@ -239,14 +364,14 @@
 <li><a href="#auth"><span class="num">27</span>Authentication &amp; Authorization</a></li>
 <li><a href="#libraries"><span class="num">28</span>Key Libraries &amp; SDKs</a></li>
 <li><a href="#di"><span class="num">29</span> Dependency Injection</a></li>
-<li><a href="#views-interop"><span class="num">30</span> Classic Views & Interop</a></li>
+<li><a href="#views-interop"><span class="num">30</span> Classic Views &amp; Interop</a></li>
 <li><a href="#os-restrictions"><span class="num">31</span> Modern OS Restrictions</a></li>
 <li><a href="#memory"><span class="num">32</span> Advanced Memory Management</a></li>
-<li><a href="#cicd"><span class="num">33</span> Mobile CI/CD & Distribution</a></li>
-<li><a href="#process-death"><span class="num">34</span> Process Death & State Restoration</a></li>
-<li><a href="#kotlin-edge"><span class="num">35</span> Advanced Kotlin & Coroutine Edge Cases</a></li>
+<li><a href="#cicd"><span class="num">33</span> Mobile CI/CD &amp; Distribution</a></li>
+<li><a href="#process-death"><span class="num">34</span> Process Death &amp; State Restoration</a></li>
+<li><a href="#kotlin-edge"><span class="num">35</span> Advanced Kotlin &amp; Coroutine Edge Cases</a></li>
 <li><a href="#testing-strategy"><span class="num">36</span> Advanced Testing Strategies</a></li>
-<li><a href="#behavioral"><span class="num">37</span>Behavioral / STAR</a></li>
+<li><a href="#dsa"><span class="num">★</span>DSA &amp; Algorithms</a></li><li><a href="#java"><span class="num">★</span>Java for Android</a></li><li><a href="#typescript"><span class="num">★</span>TypeScript for RN</a></li><li><a href="#sql"><span class="num">★</span>SQL &amp; Databases</a></li><li><a href="#osfundamentals"><span class="num">★</span>OS &amp; Networking / OSI</a></li><li><a href="#apitypes"><span class="num">★</span>API Types &amp; Real-Time</a></li><li><a href="#antipatterns"><span class="num">★</span>Anti-Patterns &amp; Best Practices</a></li><li><a href="#behavioral"><span class="num">37</span>Behavioral / STAR</a></li>
 </ul>
 <div class="toc-title">Quick Refs</div>
 <ul>
@@ -262,9 +387,9 @@
 <h1>Android <em>SDE II</em> Interview Refresher</h1>
 <p>A scannable Q&amp;A reference for senior Android interviews at FAANG-tier companies. Search any term, filter by tag, expand only what you need. Built for the 30-minute pre-interview skim.</p>
 <div class="hero-meta">
-<span>QUESTIONS <strong>319</strong></span>
-<span>SECTIONS <strong>37</strong></span>
-<span>DIAGRAMS <strong>7</strong></span>
+<span>QUESTIONS <strong>398</strong></span>
+<span>SECTIONS <strong>43</strong></span>
+<span>DIAGRAMS <strong>9</strong></span>
 <span>LAST UPDATED <strong>Jun 2026</strong></span>
 </div>
 </div>
@@ -288,6 +413,70 @@
 <!-- ===================================================================== -->
 <!-- 01: KOTLIN ESSENTIALS                                                  -->
 <!-- ===================================================================== -->
+<div class="must-review" id="must-review">
+<h2>⚡ Must Review Before Interview</h2>
+<p class="mr-sub">Two tracks — pick based on how much time you have. Links jump to the full Q&amp;A.</p>
+<div class="mr-tracks">
+<div class="mr-track">
+<div class="mr-track-title gold">⏱ 30-Minute Skim — Highest ROI</div>
+<p style="font-size:11px;color:var(--text-mute);margin:0 0 10px;text-transform:uppercase;letter-spacing:.08em;">Kotlin / Java</p>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#kotlin">val/var/const, data class, sealed class, scope fns (let/apply/run/also/with)</a></div>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#kotlin">lateinit vs lazy, companion object, inline + reified</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#concurrency">Coroutines vs Thread, Dispatchers, structured concurrency</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">Compose</p>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#compose">Recomposition — what triggers it, smart skipping</a></div>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#compose">remember / rememberSaveable / derivedStateOf differences</a></div>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#compose">Side effects: LaunchedEffect vs DisposableEffect vs SideEffect</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#compose">State hoisting — stateless composable pattern</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">Architecture</p>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#architecture">MVVM vs MVI, Repository pattern, SSOT</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#architecture">Process death — SavedStateHandle, what survives</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">DSA</p>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#dsa">Two-pointer + Sliding window templates</a></div>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#dsa">BFS/DFS — when each, template code</a></div>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#dsa">HashMap / frequency counter pattern</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">System Design</p>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#sysdesign">Universal framework — 8 steps for any question</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#sysdesign">Feed design (Paging 3 + Room SSOT)</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">React Native</p>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#reactnative">Old bridge vs new arch (JSI/TurboModules/Fabric)</a></div>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#reactnative">Native Module in Kotlin — full code sample</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">Behavioral</p>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#behavioral">3 STAR stories cold: fault reduction, Widevine, Type with Alexa</a></div>
+</div>
+<div class="mr-track">
+<div class="mr-track-title teal">⏱ 60-Minute Full Prep — Add These</div>
+<p style="font-size:11px;color:var(--text-mute);margin:0 0 10px;text-transform:uppercase;letter-spacing:.08em;">Android Internals</p>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#internals">Activity lifecycle — what happens each phase</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#internals">ANR causes and debugging</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#internals">Memory leaks — common causes, LeakCanary</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">Coroutines Deep</p>
+<div class="mr-item"><span class="mr-badge deep">L5+</span><a href="#coroutines">coroutineScope vs supervisorScope</a></div>
+<div class="mr-item"><span class="mr-badge deep">L5+</span><a href="#coroutines">Cold vs hot: Flow vs StateFlow vs SharedFlow</a></div>
+<div class="mr-item"><span class="mr-badge deep">L5+</span><a href="#coroutines">stateIn / shareIn with WhileSubscribed(5000)</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">Performance</p>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#performance">Baseline Profiles — what, why, how</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#compose_adv">Compose stability — @Stable, @Immutable, compiler metrics</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">Security + Auth</p>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#auth">OAuth2 + PKCE flow — step by step</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#auth">JWT structure, access vs refresh token storage</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#cryptography">AES-GCM why it wins, Android Keystore pattern</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">DSA Extended</p>
+<div class="mr-item"><span class="mr-badge deep">L5+</span><a href="#dsa">Dynamic programming — memoization template</a></div>
+<div class="mr-item"><span class="mr-badge deep">L5+</span><a href="#dsa">LRU Cache — implement with HashMap + DLL</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#dsa">Binary search template (works on anything sorted)</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">React Native</p>
+<div class="mr-item"><span class="mr-badge hot">🔥</span><a href="#reactnative">React hooks — useState, useEffect, useCallback, useMemo</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#reactnative">TypeScript utility types: Partial, Pick, Omit, Record</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">System Design</p>
+<div class="mr-item"><span class="mr-badge deep">L5+</span><a href="#sysdesign">Chat app — WebSocket + outbox pattern + FCM</a></div>
+<div class="mr-item"><span class="mr-badge deep">L5+</span><a href="#offline">Offline-first + conflict resolution</a></div>
+<p style="font-size:11px;color:var(--text-mute);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.08em;">Networking / DB</p>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#networking">OkHttp interceptors — auth, retry, logging</a></div>
+<div class="mr-item"><span class="mr-badge always">always</span><a href="#networking">Room relations (@Relation, @Transaction)</a></div>
+</div>
+</div>
+</div>
 <section class="topic" data-section="Kotlin Essentials" id="kotlin">
 <div class="topic-header"><span class="topic-num">01</span><h2>Kotlin Essentials</h2></div>
 <p class="topic-intro">Language features interviewers test to gauge Kotlin maturity. Skip what you know, refresh the rest.</p>
@@ -2060,7 +2249,6 @@ fun provideHomeFactory(): ScreenFactory = HomeScreenFactory()</code></pre></div>
 <p><strong>The Interview Answer:</strong> "I choose architecture based on the <em>Expected Lifetime</em> and <em>Team Size</em>. If we are a team of 10+ devs working on a mission-critical feature, the 'boilerplate' cost of Clean Architecture is actually a <strong>productivity multiplier</strong> because it prevents merge conflicts and side effects."</p>
 </div>
 </div>
-
 <div class="qa" data-tags="l5">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Scenario: Massive list performance — RecyclerView vs. LazyColumn?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -3773,7 +3961,6 @@ biometricPrompt.authenticate(info, BiometricPrompt.CryptoObject(cipher))</code><
 <section class="topic" data-section="Design Patterns" id="patterns">
 <div class="topic-header"><span class="topic-num">12</span><h2>Design Patterns</h2></div>
 <p class="topic-intro">Classic GoF patterns mapped to Android idioms, adapted for mobile-specific constraints: aggressive garbage collection (GC) pauses, strict RAM limits, intermittent connectivity, and sudden process termination.</p>
-
 <div class="qa" data-tags="high">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Creational: Singleton — pattern, Kotlin idiom, common pitfalls</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -3789,20 +3976,19 @@ biometricPrompt.authenticate(info, BiometricPrompt.CryptoObject(cipher))</code><
 </ul>
 </div>
 </div>
-
 <div class="qa" data-tags="high code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Creational: Object Pool — When to use it and trade-offs?</div><span class="toggle">+</span></div>
 <div class="qa-body">
 <p><strong>Mobile Use Case:</strong> Reusing expensive objects to prevent OutOfMemory (OOM) errors and GC jank during scrolling or animations.</p>
 <p><strong>Real Examples:</strong> <code>RecyclerView.RecycledViewPool</code>, <code>Message.obtain()</code>, Bitmap Pools in Coil.</p>
 <table>
-    <tbody>
-        <tr><td><strong>When to Use</strong></td><td>Objects are expensive to create, instantiated frequently, and cause UI stutter.</td></tr>
-        <tr><td><strong>When to Avoid</strong></td><td>Lightweight objects (Kotlin data classes) — wastes more memory than it saves.</td></tr>
-        <tr><td><strong>Pros</strong></td><td>Eliminates allocation overhead; ensures smooth 60/120fps rendering.</td></tr>
-        <tr><td><strong>Cons</strong></td><td>Can cause memory leaks if objects aren't properly reset before pooling.</td></tr>
-        <tr><td><strong>Trade-offs</strong></td><td><strong>CPU vs RAM:</strong> You trade the GC CPU overhead for permanent RAM usage and manual state-clearing logic.</td></tr>
-    </tbody>
+<tbody>
+<tr><td><strong>When to Use</strong></td><td>Objects are expensive to create, instantiated frequently, and cause UI stutter.</td></tr>
+<tr><td><strong>When to Avoid</strong></td><td>Lightweight objects (Kotlin data classes) — wastes more memory than it saves.</td></tr>
+<tr><td><strong>Pros</strong></td><td>Eliminates allocation overhead; ensures smooth 60/120fps rendering.</td></tr>
+<tr><td><strong>Cons</strong></td><td>Can cause memory leaks if objects aren't properly reset before pooling.</td></tr>
+<tr><td><strong>Trade-offs</strong></td><td><strong>CPU vs RAM:</strong> You trade the GC CPU overhead for permanent RAM usage and manual state-clearing logic.</td></tr>
+</tbody>
 </table>
 <pre><code>class PathPool(private val maxSize: Int = 10) {
     private val pool = ArrayDeque&lt;Path&gt;(maxSize)
@@ -3816,9 +4002,8 @@ biometricPrompt.authenticate(info, BiometricPrompt.CryptoObject(cipher))</code><
 }</code></pre>
 </div>
 </div>
-
 <div class="qa" data-tags="high code">
-<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Creational: Builder & DSL — when to use it in Kotlin?</div><span class="toggle">+</span></div>
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Creational: Builder &amp; DSL — when to use it in Kotlin?</div><span class="toggle">+</span></div>
 <div class="qa-body">
 <p><strong>Mobile Use Case:</strong> Configuring complex OS payloads (notifications, intents, dialogs) where parameters are optional but immutability is required.</p>
 <p>In Kotlin, often replaceable by default args + named params, BUT Builder is still preferred for:</p>
@@ -3847,7 +4032,6 @@ fun analyticsEvent(name: String, block: AnalyticsEvent.Builder.() -&gt; Unit): A
 }</code></pre>
 </div>
 </div>
-
 <div class="qa" data-tags="med code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Creational: Factory pattern — what is it?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -3866,19 +4050,18 @@ object AnimalFactory {
 }</code></pre>
 </div>
 </div>
-
 <div class="qa" data-tags="hot code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Structural: Facade (Repository Pattern) — When to use it?</div><span class="toggle">+</span></div>
 <div class="qa-body">
 <p><strong>Mobile Use Case:</strong> Abstracting the complexity of network conditions and caching behind a single "Offline-First" API.</p>
 <p><strong>Real Examples:</strong> The standard Android Repository pattern.</p>
 <table>
-    <tbody>
-        <tr><td><strong>When to Use</strong></td><td>The UI needs data but shouldn't care if it comes from Room (cache) or Retrofit (network).</td></tr>
-        <tr><td><strong>When to Avoid</strong></td><td>Purely online apps with no local database and simple CRUD operations.</td></tr>
-        <tr><td><strong>Pros</strong></td><td>Single Source of Truth (SSOT); prevents duplicate network calls; saves battery by serving cached data.</td></tr>
-        <tr><td><strong>Trade-offs</strong></td><td><strong>Simplicity vs. Robustness:</strong> Adds layers of indirection, but guarantees app functions during cellular dropouts.</td></tr>
-    </tbody>
+<tbody>
+<tr><td><strong>When to Use</strong></td><td>The UI needs data but shouldn't care if it comes from Room (cache) or Retrofit (network).</td></tr>
+<tr><td><strong>When to Avoid</strong></td><td>Purely online apps with no local database and simple CRUD operations.</td></tr>
+<tr><td><strong>Pros</strong></td><td>Single Source of Truth (SSOT); prevents duplicate network calls; saves battery by serving cached data.</td></tr>
+<tr><td><strong>Trade-offs</strong></td><td><strong>Simplicity vs. Robustness:</strong> Adds layers of indirection, but guarantees app functions during cellular dropouts.</td></tr>
+</tbody>
 </table>
 <pre><code>class UserRepository(private val api: UserApi, private val dao: UserDao) {
     fun getUser(id: String): Flow&lt;User&gt; = flow {
@@ -3894,18 +4077,17 @@ object AnimalFactory {
 }</code></pre>
 </div>
 </div>
-
 <div class="qa" data-tags="l5 code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Structural: Flyweight — When to use it and trade-offs?</div><span class="toggle">+</span></div>
 <div class="qa-body">
 <p><strong>Mobile Use Case:</strong> Drastically reducing RAM usage by sharing common state across thousands of objects.</p>
 <p><strong>Real Examples:</strong> Compose <code>@Immutable</code> parameters, Android String pool, sharing <code>TextPaint</code> objects.</p>
 <table>
-    <tbody>
-        <tr><td><strong>When to Use</strong></td><td>Lists of 1,000+ items (chat apps, feeds) that share redundant data like formatting.</td></tr>
-        <tr><td><strong>Pros</strong></td><td>Prevents OutOfMemory crashes on low-end devices; speeds up rendering.</td></tr>
-        <tr><td><strong>Trade-offs</strong></td><td><strong>Memory Savings vs. Immutability:</strong> Massively reduces heap size but requires strict separation of shared and unique state.</td></tr>
-    </tbody>
+<tbody>
+<tr><td><strong>When to Use</strong></td><td>Lists of 1,000+ items (chat apps, feeds) that share redundant data like formatting.</td></tr>
+<tr><td><strong>Pros</strong></td><td>Prevents OutOfMemory crashes on low-end devices; speeds up rendering.</td></tr>
+<tr><td><strong>Trade-offs</strong></td><td><strong>Memory Savings vs. Immutability:</strong> Massively reduces heap size but requires strict separation of shared and unique state.</td></tr>
+</tbody>
 </table>
 <pre><code>object AvatarFormatFactory {
     private val formatCache = mutableMapOf&lt;Int, Paint&gt;()
@@ -3918,7 +4100,6 @@ object AnimalFactory {
 }</code></pre>
 </div>
 </div>
-
 <div class="qa" data-tags="med">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Structural: Adapter pattern — Android examples?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -3930,18 +4111,17 @@ object AnimalFactory {
 </ul>
 </div>
 </div>
-
 <div class="qa" data-tags="hot code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Behavioral: State Pattern (State Machine / MVI) — When to use it?</div><span class="toggle">+</span></div>
 <div class="qa-body">
 <p><strong>Mobile Use Case:</strong> Modeling the complex reality of mobile networks (Loading, Success, Empty, Network Error).</p>
 <p><strong>Real Examples:</strong> MVI Architecture, Kotlin <code>sealed class UiState</code>.</p>
 <table>
-    <tbody>
-        <tr><td><strong>When to Use</strong></td><td>Represent mutually exclusive UI states and prevent impossible combinations (e.g., showing a progress bar AND an error simultaneously).</td></tr>
-        <tr><td><strong>Pros</strong></td><td>Compiler enforces exhaustiveness (when statements); eliminates UI sync bugs.</td></tr>
-        <tr><td><strong>Trade-offs</strong></td><td><strong>Verbosity vs. Bug Prevention:</strong> Write more code upfront to guarantee the UI cannot enter an illegal state.</td></tr>
-    </tbody>
+<tbody>
+<tr><td><strong>When to Use</strong></td><td>Represent mutually exclusive UI states and prevent impossible combinations (e.g., showing a progress bar AND an error simultaneously).</td></tr>
+<tr><td><strong>Pros</strong></td><td>Compiler enforces exhaustiveness (when statements); eliminates UI sync bugs.</td></tr>
+<tr><td><strong>Trade-offs</strong></td><td><strong>Verbosity vs. Bug Prevention:</strong> Write more code upfront to guarantee the UI cannot enter an illegal state.</td></tr>
+</tbody>
 </table>
 <pre><code>sealed interface FeedState {
     data object Loading : FeedState
@@ -3957,19 +4137,18 @@ when (val currentState = state.value) {
 }</code></pre>
 </div>
 </div>
-
 <div class="qa" data-tags="l5 code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Behavioral: Command Pattern (Deferred Execution) — When to use it?</div><span class="toggle">+</span></div>
 <div class="qa-body">
 <p><strong>Mobile Use Case:</strong> Guaranteeing execution of a task (like uploading a photo) even if the user swipes the app away or the OS kills it.</p>
 <p><strong>Real Examples:</strong> <code>WorkManager</code> Workers, Analytics event queues.</p>
 <table>
-    <tbody>
-        <tr><td><strong>When to Use</strong></td><td>Deferrable, guaranteed background work (syncing logs, uploading media).</td></tr>
-        <tr><td><strong>When to Avoid</strong></td><td>Immediate user-facing actions (e.g., processing a credit card transaction while user waits).</td></tr>
-        <tr><td><strong>Pros</strong></td><td>Survives process death; OS optimizes battery by batching commands with other apps' commands.</td></tr>
-        <tr><td><strong>Trade-offs</strong></td><td><strong>Reliability vs. Immediacy:</strong> Guarantees the command executes eventually (saving battery), but not instantly.</td></tr>
-    </tbody>
+<tbody>
+<tr><td><strong>When to Use</strong></td><td>Deferrable, guaranteed background work (syncing logs, uploading media).</td></tr>
+<tr><td><strong>When to Avoid</strong></td><td>Immediate user-facing actions (e.g., processing a credit card transaction while user waits).</td></tr>
+<tr><td><strong>Pros</strong></td><td>Survives process death; OS optimizes battery by batching commands with other apps' commands.</td></tr>
+<tr><td><strong>Trade-offs</strong></td><td><strong>Reliability vs. Immediacy:</strong> Guarantees the command executes eventually (saving battery), but not instantly.</td></tr>
+</tbody>
 </table>
 <pre><code>class UploadPhotoWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
     override suspend fun doWork(): Result {
@@ -3983,7 +4162,6 @@ when (val currentState = state.value) {
 }</code></pre>
 </div>
 </div>
-
 <div class="qa" data-tags="high">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Behavioral: Observer pattern in Android — where do you see it?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -3997,7 +4175,6 @@ when (val currentState = state.value) {
 </ul>
 </div>
 </div>
-
 <div class="qa" data-tags="med code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Behavioral: Strategy pattern — example use in Android</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7504,7 +7681,6 @@ api.call(accessToken)</code></pre></div>
 <section class="topic" data-section="Dependency Injection" id="di">
 <div class="topic-header"><span class="topic-num">29</span><h2>Dependency Injection</h2></div>
 <p class="topic-intro">Deep dives into Dagger/Hilt under the hood, scopes, and memory implications. FAANG interviews test how it works, not just how to use it.</p>
-
 <div class="qa" data-tags="hot code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>@Provides vs @Binds — What is the difference and performance impact?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7522,7 +7698,6 @@ abstract class AnalyticsModule {
 }</code></pre>
 </div>
 </div>
-
 <div class="qa" data-tags="high">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Explain Scopes (@Singleton vs @ViewModelScoped) and memory leaks.</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7535,7 +7710,6 @@ abstract class AnalyticsModule {
 <p><strong>Interview Gotcha:</strong> Injecting an unscoped object into a <code>@Singleton</code> makes that object effectively a singleton, regardless of its own annotations.</p>
 </div>
 </div>
-
 <div class="qa" data-tags="l5 code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>What is Assisted Injection and when do you need it?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7556,11 +7730,9 @@ class UserDetailViewModel @AssistedInject constructor(
 </div>
 </div>
 </section>
-
-<section class="topic" data-section="Classic Views & Interop" id="views-interop">
-<div class="topic-header"><span class="topic-num">30</span><h2>Classic Views & Interop</h2></div>
+<section class="topic" data-section="Classic Views &amp; Interop" id="views-interop">
+<div class="topic-header"><span class="topic-num">30</span><h2>Classic Views &amp; Interop</h2></div>
 <p class="topic-intro">Bridging the gap between legacy XML codebases and modern Compose UI.</p>
-
 <div class="qa" data-tags="hot">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Explain the classic View Lifecycle (onMeasure, onLayout, onDraw)</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7573,7 +7745,6 @@ class UserDetailViewModel @AssistedInject constructor(
 <p><strong>Gotcha:</strong> Never allocate objects (like <code>new Paint()</code>) inside <code>onDraw()</code> because it is called 60+ times per second. It will trigger aggressive GC and drop frames.</p>
 </div>
 </div>
-
 <div class="qa" data-tags="high code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>How do you embed Compose in XML and XML in Compose?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7595,11 +7766,9 @@ fun LegacyMapView() {
 </div>
 </div>
 </section>
-
 <section class="topic" data-section="Modern OS Restrictions" id="os-restrictions">
 <div class="topic-header"><span class="topic-num">31</span><h2>Modern OS Restrictions</h2></div>
 <p class="topic-intro">Android 12 through 15+ have heavily locked down background execution, alarms, and permissions to save battery and protect privacy.</p>
-
 <div class="qa" data-tags="hot">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>What changed with Foreground Services in Android 14+?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7611,7 +7780,6 @@ fun LegacyMapView() {
 </ul>
 </div>
 </div>
-
 <div class="qa" data-tags="high">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Explain the shift to Granular Permissions and Photo Picker (Android 13/14)</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7624,7 +7792,6 @@ fun LegacyMapView() {
 <p><strong>Best Practice (Photo Picker):</strong> Instead of requesting <em>any</em> permissions, use the OS-level Photo Picker (via <code>ActivityResultContracts.PickVisualMedia</code>). The OS renders the gallery UI out-of-process and grants your app temporary, read-only access to only the specific photos the user selects.</p>
 </div>
 </div>
-
 <div class="qa" data-tags="med">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>What is the crackdown on Exact Alarms (Android 14)?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7633,11 +7800,9 @@ fun LegacyMapView() {
 </div>
 </div>
 </section>
-
 <section class="topic" data-section="Advanced Memory Management" id="memory">
 <div class="topic-header"><span class="topic-num">32</span><h2>Advanced Memory Management</h2></div>
 <p class="topic-intro">Understanding how the JVM handles memory, debugging OutOfMemory (OOM) errors, and reference types.</p>
-
 <div class="qa" data-tags="hot">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Explain GC Roots and Reference Types (Strong, Weak, Soft, Phantom)</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7650,7 +7815,6 @@ fun LegacyMapView() {
 </ul>
 </div>
 </div>
-
 <div class="qa" data-tags="l5">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>How do you read a Heap Dump? (Shallow Size vs Retained Size)</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7663,11 +7827,9 @@ fun LegacyMapView() {
 </div>
 </div>
 </section>
-
-<section class="topic" data-section="Mobile CI/CD & Distribution" id="cicd">
-<div class="topic-header"><span class="topic-num">33</span><h2>Mobile CI/CD & Distribution</h2></div>
+<section class="topic" data-section="Mobile CI/CD &amp; Distribution" id="cicd">
+<div class="topic-header"><span class="topic-num">33</span><h2>Mobile CI/CD &amp; Distribution</h2></div>
 <p class="topic-intro">How code actually gets from a Pull Request to a user's device.</p>
-
 <div class="qa" data-tags="high">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>App Bundles (.aab) vs APKs and Play Feature Delivery</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7676,7 +7838,6 @@ fun LegacyMapView() {
 <p><strong>Play Feature Delivery:</strong> Using AABs, you can modularize your app. E.g., a "Customer Support Chat" module is only downloaded on-demand when the user actually navigates to that screen.</p>
 </div>
 </div>
-
 <div class="qa" data-tags="med">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Explain a typical Mobile CI/CD Pipeline (Fastlane / GitHub Actions)</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7690,9 +7851,8 @@ fun LegacyMapView() {
 </div>
 </section>
 <section class="topic" data-section="Process Death" id="process-death">
-<div class="topic-header"><span class="topic-num">34</span><h2>Process Death & State Restoration</h2></div>
+<div class="topic-header"><span class="topic-num">34</span><h2>Process Death &amp; State Restoration</h2></div>
 <p class="topic-intro">Configuration changes (rotation) are easy. Surviving process death (OS killing your app) is the true test of a senior developer.</p>
-
 <div class="qa" data-tags="hot">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Difference between Configuration Change and Process Death?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7704,10 +7864,8 @@ fun LegacyMapView() {
 </div>
 </div>
 </section>
-
 <section class="topic" data-section="Kotlin Edge Cases" id="kotlin-edge">
-<div class="topic-header"><span class="topic-num">35</span><h2>Advanced Kotlin & Coroutines</h2></div>
-
+<div class="topic-header"><span class="topic-num">35</span><h2>Advanced Kotlin &amp; Coroutines</h2></div>
 <div class="qa" data-tags="l5 code">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Why did my coroutine not cancel? (The "Blocking Call" Trap)</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7724,10 +7882,8 @@ launch(Dispatchers.Default) {
 </div>
 </div>
 </section>
-
 <section class="topic" data-section="Testing Strategy" id="testing-strategy">
 <div class="topic-header"><span class="topic-num">36</span><h2>Advanced Testing Strategies</h2></div>
-
 <div class="qa" data-tags="med">
 <div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>When to use Mocks vs. Fakes?</div><span class="toggle">+</span></div>
 <div class="qa-body">
@@ -7741,6 +7897,1429 @@ launch(Dispatchers.Default) {
 <!-- ===================================================================== -->
 <!-- 37: BEHAVIORAL                                                         -->
 <!-- ===================================================================== -->
+</section>
+<section class="topic" data-section="DSA &amp; Algorithms" id="dsa">
+<div class="topic-header"><span class="topic-num">★</span><h2>DSA &amp; Algorithms</h2></div>
+<p class="topic-intro">Coding round fundamentals. Every pattern has: recognition signals, an SVG diagram to visualize the approach, a template, and the problems where it's applied. Start with the framework question, then patterns in order.</p>
+<div class="qa" data-tags="hot high">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>How to approach ANY coding interview problem — the UREOP framework</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><p>Never jump to code. A structured approach signals senior thinking and prevents wasted effort.</p>
+<table><thead><tr><th>Step</th><th>Action</th><th>Time</th></tr></thead><tbody>
+<tr><td><strong>U</strong>nderstand</td><td>Restate the problem. Confirm input/output. Ask about constraints (size, type, edge cases). Are duplicates possible? Negative numbers?</td><td>2-3 min</td></tr>
+<tr><td><strong>R</strong>epresent</td><td>Draw examples. At least 2: normal case + edge case. Write them down, don't just think.</td><td>2 min</td></tr>
+<tr><td><strong>E</strong>xplore</td><td>Think aloud — brute force first (state complexity), then optimize. "Naive is O(n²), but I can do better with a hashmap..."</td><td>3-5 min</td></tr>
+<tr><td><strong>O</strong>ptimize</td><td>Identify the pattern. Agree on approach before coding. "I'll use a sliding window — does that make sense?"</td><td>2 min</td></tr>
+<tr><td><strong>P</strong>rogram</td><td>Code clean, talk through logic. Handle edge cases explicitly. Don't code in silence.</td><td>15-20 min</td></tr>
+</tbody></table>
+<div class="callout"><strong>After coding:</strong> trace through your example by hand. Find bugs before they do. Then discuss time/space complexity. "This is O(n) time and O(1) space because..."</div>
+<p><strong>If you're stuck:</strong> say "Let me think about the pattern here..." then ask "Can I ask a clarifying question?" Never sit silent for more than 60 seconds.</p></div>
+</div>
+<div class="qa" data-tags="hot high diagram">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Big O notation — time and space complexity quick reference</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><div class="diagram">
+<svg viewbox="0 0 500 220" xmlns="http://www.w3.org/2000/svg">
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="11" x="10" y="20">Complexity (fastest → slowest for large n)</text>
+<rect fill="#95C97A" height="22" opacity=".9" rx="4" width="70" x="10" y="30"></rect>
+<text fill="#0E1014" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="45" y="46">O(1)</text>
+<text fill="#E8E5DD" font-family="Geist" font-size="11" x="90" y="46">Hash lookup, array index, stack push/pop</text>
+<rect fill="#7FB5B5" height="22" opacity=".9" rx="4" width="100" x="10" y="58"></rect>
+<text fill="#0E1014" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="60" y="74">O(log n)</text>
+<text fill="#E8E5DD" font-family="Geist" font-size="11" x="120" y="74">Binary search, balanced BST ops</text>
+<rect fill="#7FB5B5" height="22" opacity=".7" rx="4" width="130" x="10" y="86"></rect>
+<text fill="#0E1014" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="75" y="102">O(n)</text>
+<text fill="#E8E5DD" font-family="Geist" font-size="11" x="150" y="102">Single loop, linear scan, HashMap build</text>
+<rect fill="#D4A574" height="22" opacity=".7" rx="4" width="200" x="10" y="114"></rect>
+<text fill="#0E1014" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="105" y="130">O(n log n)</text>
+<text fill="#E8E5DD" font-family="Geist" font-size="11" x="220" y="130">Merge sort, heap sort, most good sorts</text>
+<rect fill="#E5847A" height="22" opacity=".7" rx="4" width="310" x="10" y="142"></rect>
+<text fill="#0E1014" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="160" y="158">O(n²)</text>
+<text fill="#E8E5DD" font-family="Geist" font-size="11" x="330" y="158">Nested loops, bubble sort</text>
+<rect fill="#E5847A" height="22" opacity=".5" rx="4" width="430" x="10" y="170"></rect>
+<text fill="#0E1014" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="220" y="186">O(2ⁿ) / O(n!)</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" x="450" y="186">avoid</text>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="250" y="212">Target O(n) or O(n log n) in interviews. Know why yours is what it is.</text>
+</svg></div>
+<p><strong>Space complexity note:</strong> O(1) = constant extra space (no DS proportional to n). O(n) = storing n items (hashmap, array copy). Recursive calls add O(depth) stack space.</p>
+<p><strong>What interviewers want to hear:</strong> "This is O(n) time because I visit each element once, and O(n) space for the hashmap. Could I get it to O(1) space? Yes, but I'd sacrifice readability for this problem size."</p></div>
+</div>
+<div class="qa" data-tags="hot high code diagram">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Two Pointers — pattern, recognition, template, problems</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><div class="diagram">
+<svg viewbox="0 0 500 160" xmlns="http://www.w3.org/2000/svg">
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="11" x="10" y="20">Two Pointers — converging from both ends</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#D4A574" width="46" x="10" y="34"></rect>
+<text fill="#E8E5DD" font-family="JetBrains Mono" font-size="14" text-anchor="middle" x="33" y="57">1</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#2A2F3A" width="46" x="60" y="34"></rect>
+<text fill="#E8E5DD" font-family="JetBrains Mono" font-size="14" text-anchor="middle" x="83" y="57">3</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#2A2F3A" width="46" x="110" y="34"></rect>
+<text fill="#E8E5DD" font-family="JetBrains Mono" font-size="14" text-anchor="middle" x="133" y="57">5</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#2A2F3A" width="46" x="160" y="34"></rect>
+<text fill="#E8E5DD" font-family="JetBrains Mono" font-size="14" text-anchor="middle" x="183" y="57">7</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#2A2F3A" width="46" x="210" y="34"></rect>
+<text fill="#E8E5DD" font-family="JetBrains Mono" font-size="14" text-anchor="middle" x="233" y="57">9</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#2A2F3A" width="46" x="260" y="34"></rect>
+<text fill="#E8E5DD" font-family="JetBrains Mono" font-size="14" text-anchor="middle" x="283" y="57">11</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#2A2F3A" width="46" x="310" y="34"></rect>
+<text fill="#E8E5DD" font-family="JetBrains Mono" font-size="14" text-anchor="middle" x="333" y="57">13</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#7FB5B5" width="46" x="360" y="34"></rect>
+<text fill="#E8E5DD" font-family="JetBrains Mono" font-size="14" text-anchor="middle" x="383" y="57">15</text>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="11" text-anchor="middle" x="33" y="90">L</text>
+<text fill="#7FB5B5" font-family="JetBrains Mono" font-size="11" text-anchor="middle" x="383" y="90">R</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" text-anchor="middle" x="200" y="115">sum(L+R) too small → move L right | too big → move R left</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" text-anchor="middle" x="200" y="135">O(n) time vs O(n²) brute force — same result</text>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="200" y="152">Two Sum II, Container With Most Water, 3Sum, Trapping Rain Water</text>
+</svg></div>
+<p><strong>Recognize when:</strong> sorted array + find pair/triplet with target sum/difference | remove duplicates in-place | palindrome check | comparing two arrays</p>
+<pre><code>// Template — Two Sum (sorted array)
+fun twoSum(nums: IntArray, target: Int): IntArray {
+    var left = 0; var right = nums.size - 1
+    while (left &lt; right) {
+        val sum = nums[left] + nums[right]
+        when {
+            sum == target -&gt; return intArrayOf(left, right)
+            sum &lt; target  -&gt; left++   // need bigger
+            else          -&gt; right--  // need smaller
+        }
+    }
+    return intArrayOf(-1, -1)
+}</code></pre>
+<div class="pattern-grid">
+<div class="pattern-card"><strong>Classic problems</strong><em>Always asked</em><ul><li>Two Sum II (sorted)</li><li>Container With Most Water</li><li>3Sum → fix one, two-ptr rest</li><li>Trapping Rain Water</li></ul></div>
+<div class="pattern-card"><strong>Variation: Same direction</strong><em>Remove duplicates / Fast-slow</em><ul><li>Remove Duplicates in Sorted Array</li><li>Move Zeroes</li><li>Linked List Cycle (Floyd's)</li><li>Find Middle of LinkedList</li></ul></div>
+</div></div>
+</div>
+<div class="qa" data-tags="hot high code diagram">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Sliding Window — pattern, recognition, template, problems</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><div class="diagram">
+<svg viewbox="0 0 500 160" xmlns="http://www.w3.org/2000/svg">
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="11" x="10" y="20">Sliding Window — window expands right, shrinks from left</text>
+<g opacity=".4">
+<rect fill="#21252F" height="36" rx="4" stroke="#2A2F3A" width="46" x="10" y="34"></rect>
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="13" text-anchor="middle" x="33" y="57">a</text>
+</g>
+<rect fill="rgba(212,165,116,0.15)" height="48" rx="6" stroke="#D4A574" stroke-width="1.5" width="148" x="60" y="28"></rect>
+<rect fill="#21252F" height="36" rx="4" stroke="#D4A574" width="46" x="60" y="34"></rect>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="13" text-anchor="middle" x="83" y="57">b</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#D4A574" width="46" x="110" y="34"></rect>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="13" text-anchor="middle" x="133" y="57">c</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#D4A574" width="46" x="160" y="34"></rect>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="13" text-anchor="middle" x="183" y="57">a</text>
+<g opacity=".4">
+<rect fill="#21252F" height="36" rx="4" stroke="#2A2F3A" width="46" x="210" y="34"></rect>
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="13" text-anchor="middle" x="233" y="57">b</text>
+<rect fill="#21252F" height="36" rx="4" stroke="#2A2F3A" width="46" x="260" y="34"></rect>
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="13" text-anchor="middle" x="283" y="57">c</text>
+</g>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="11" text-anchor="middle" x="83" y="92">L</text>
+<text fill="#7FB5B5" font-family="JetBrains Mono" font-size="11" text-anchor="middle" x="183" y="92">R</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" text-anchor="middle" x="200" y="115">R expands → if condition broken → shrink L until valid again</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" text-anchor="middle" x="200" y="135">O(n) — each element enters and exits window at most once</text>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="200" y="152">Longest Substring No Repeat, Min Window Substring, Max Consecutive Ones</text>
+</svg></div>
+<p><strong>Recognize when:</strong> subarray / substring + "longest/shortest/minimum" + constraint on the window content</p>
+<pre><code>// Template — Longest Substring Without Repeating Characters
+fun lengthOfLongestSubstring(s: String): Int {
+    val seen = HashMap&lt;Char, Int&gt;()  // char → last index
+    var left = 0; var maxLen = 0
+    for (right in s.indices) {
+        if (s[right] in seen &amp;&amp; seen[s[right]]!! &gt;= left) {
+            left = seen[s[right]]!! + 1  // shrink window
+        }
+        seen[s[right]] = right
+        maxLen = maxOf(maxLen, right - left + 1)
+    }
+    return maxLen
+}  // O(n) time, O(min(m,n)) space</code></pre>
+<div class="pattern-grid">
+<div class="pattern-card"><strong>Fixed size window</strong><em>Max/min sum of k elements</em><ul><li>Max Average Subarray I (size k)</li><li>Number of Subarrays of size k</li><li>Sliding Window Maximum</li></ul></div>
+<div class="pattern-card"><strong>Variable size window</strong><em>Longest/shortest with constraint</em><ul><li>Longest Substring No Repeat</li><li>Minimum Window Substring</li><li>Longest Repeating Char Replacement</li><li>Fruit Into Baskets</li></ul></div>
+</div></div>
+</div>
+<div class="qa" data-tags="hot high code diagram">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Binary Search — template, variants, and when to recognize it</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><div class="diagram">
+<svg viewbox="0 0 500 170" xmlns="http://www.w3.org/2000/svg">
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="11" x="10" y="20">Binary Search — halve search space each step: O(log n)</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#2A2F3A" width="40" x="10" y="32"></rect><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="30" y="53">1</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#2A2F3A" width="40" x="55" y="32"></rect><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="75" y="53">3</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#2A2F3A" width="40" x="100" y="32"></rect><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="120" y="53">5</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#2A2F3A" width="40" x="145" y="32"></rect><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="165" y="53">7</text>
+<rect fill="rgba(212,165,116,0.2)" height="44" rx="4" stroke="#D4A574" stroke-width="2" width="40" x="190" y="26"></rect><text fill="#D4A574" font-family="JetBrains Mono" font-size="12" font-weight="700" text-anchor="middle" x="210" y="53">9</text>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="210" y="82">mid</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#2A2F3A" width="40" x="235" y="32"></rect><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="255" y="53">11</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#2A2F3A" width="40" x="280" y="32"></rect><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="300" y="53">13</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#95C97A" width="40" x="325" y="32"></rect><text fill="#95C97A" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="345" y="53">15</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#7FB5B5" width="40" x="370" y="32"></rect><text fill="#7FB5B5" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="390" y="53">17</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" x="10" y="105">Target=15 → mid=9 → target&gt;mid → search RIGHT half</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" x="10" y="122">Next mid=13 → target&gt;mid → search RIGHT → mid=15 ✓ found in 3 steps vs 8</text>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="10" x="10" y="145">Key insight: works on ANY monotonic function, not just sorted arrays</text>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="10" x="10" y="160">Works when: if f(x) is true, f(x+1) is also true (or vice versa)</text>
+</svg></div>
+<pre><code>// Universal binary search template
+fun binarySearch(nums: IntArray, target: Int): Int {
+    var lo = 0; var hi = nums.size - 1
+    while (lo &lt;= hi) {
+        val mid = lo + (hi - lo) / 2   // avoid overflow vs (lo+hi)/2
+        when {
+            nums[mid] == target -&gt; return mid
+            nums[mid] &lt; target  -&gt; lo = mid + 1
+            else                -&gt; hi = mid - 1
+        }
+    }
+    return -1  // or lo for insertion point
+}
+
+// Binary search on ANSWER (common pattern!)
+// "Find minimum capacity such that condition is met"
+fun canShip(weights: IntArray, days: Int, capacity: Int): Boolean { ... }
+// lo = max(weights), hi = sum(weights)
+// binary search on capacity, check if canShip(weights, days, mid)</code></pre>
+<div class="pattern-grid">
+<div class="pattern-card"><strong>Classic</strong><em>Sorted array</em><ul><li>Search in Rotated Sorted Array</li><li>Find First/Last Position</li><li>Search a 2D Matrix</li></ul></div>
+<div class="pattern-card"><strong>Binary search on ANSWER</strong><em>Minimize/maximize something</em><ul><li>Koko Eating Bananas</li><li>Ship Packages Within D Days</li><li>Capacity to Ship (Samsara-type)</li></ul></div>
+</div></div>
+</div>
+<div class="qa" data-tags="hot high code">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Hash Map / Frequency Counter — the most powerful O(1) tool</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><p><strong>Recognize when:</strong> need to count, group, look up, or check if something was seen before.</p>
+<pre><code>// Pattern 1: Frequency counter
+fun isAnagram(s: String, t: String): Boolean {
+    if (s.length != t.length) return false
+    val freq = IntArray(26)
+    s.forEach { freq[it - 'a']++ }
+    t.forEach { freq[it - 'a']-- }
+    return freq.all { it == 0 }
+}
+
+// Pattern 2: Complement lookup (Two Sum)
+fun twoSum(nums: IntArray, target: Int): IntArray {
+    val map = HashMap&lt;Int, Int&gt;()  // value → index
+    for ((i, n) in nums.withIndex()) {
+        val complement = target - n
+        if (complement in map) return intArrayOf(map[complement]!!, i)
+        map[n] = i
+    }
+    return intArrayOf()
+}
+
+// Pattern 3: Grouping
+fun groupAnagrams(strs: Array&lt;String&gt;): List&lt;List&lt;String&gt;&gt; {
+    val map = HashMap&lt;String, MutableList&lt;String&gt;&gt;()
+    strs.forEach { s -&gt;
+        val key = s.toCharArray().sorted().joinToString("")  // sorted chars as key
+        map.getOrPut(key) { mutableListOf() }.add(s)
+    }
+    return map.values.toList()
+}</code></pre>
+<div class="pattern-grid">
+<div class="pattern-card"><strong>Classic HashMap problems</strong><em>All O(n) solutions</em><ul><li>Two Sum (complement lookup)</li><li>Group Anagrams (sorted key)</li><li>Top K Frequent Elements</li><li>Longest Consecutive Sequence</li></ul></div>
+<div class="pattern-card"><strong>Sliding window + HashMap</strong><em>Substring problems</em><ul><li>Longest Substring No Repeat</li><li>Minimum Window Substring</li><li>Substring with Concatenation</li></ul></div>
+</div></div>
+</div>
+<div class="qa" data-tags="hot high code diagram">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Stack — monotonic stack, when to use it</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><div class="diagram">
+<svg viewbox="0 0 500 155" xmlns="http://www.w3.org/2000/svg">
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="11" x="10" y="20">Monotonic Decreasing Stack — find Next Greater Element</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" x="10" y="40">Array: [2, 1, 5, 3, 6, 4, 8, 5]</text>
+<text fill="#D4A574" font-family="Geist" font-size="11" x="10" y="62">Process 5: stack=[2,1,5] → 5&gt;1 pop 1 (NGE of 1 = 5) → 5&gt;2 pop 2 (NGE of 2 = 5)</text>
+<text fill="#7FB5B5" font-family="Geist" font-size="11" x="10" y="84">Stack acts as a monotonically decreasing lane — pop when current &gt; top</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" x="10" y="115">Result: [5, 5, 6, 6, 8, 8, -1, -1]</text>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="10" x="10" y="140">O(n) — each element pushed and popped at most once</text>
+</svg></div>
+<pre><code>// Balanced parentheses — stack classic
+fun isValid(s: String): Boolean {
+    val stack = ArrayDeque&lt;Char&gt;()
+    for (c in s) {
+        when (c) {
+            '(', '[', '{' -&gt; stack.addLast(c)
+            ')' -&gt; if (stack.removeLastOrNull() != '(') return false
+            ']' -&gt; if (stack.removeLastOrNull() != '[') return false
+            '}' -&gt; if (stack.removeLastOrNull() != '{') return false
+        }
+    }
+    return stack.isEmpty()
+}
+
+// Next Greater Element — monotonic stack
+fun nextGreaterElement(nums: IntArray): IntArray {
+    val result = IntArray(nums.size) { -1 }
+    val stack = ArrayDeque&lt;Int&gt;()  // stores indices
+    for (i in nums.indices) {
+        while (stack.isNotEmpty() &amp;&amp; nums[stack.last()] &lt; nums[i]) {
+            result[stack.removeLast()] = nums[i]
+        }
+        stack.addLast(i)
+    }
+    return result
+}</code></pre>
+<div class="pattern-grid">
+<div class="pattern-card"><strong>Classic stack</strong><ul><li>Valid Parentheses</li><li>Min Stack (track minimum)</li><li>Evaluate Reverse Polish</li><li>Daily Temperatures</li></ul></div>
+<div class="pattern-card"><strong>Monotonic stack</strong><ul><li>Next Greater Element</li><li>Largest Rectangle in Histogram</li><li>Trapping Rain Water (stack approach)</li><li>Asteroid Collision</li></ul></div>
+</div></div>
+</div>
+<div class="qa" data-tags="hot high code diagram">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>BFS — breadth-first search template, shortest path, level order</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><div class="diagram">
+<svg viewbox="0 0 500 190" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="abfs" markerheight="8" markerwidth="8" orient="auto" refx="7" refy="3"><path d="M0,0 L0,6 L8,3 z" fill="#7FB5B5"></path></marker></defs>
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="11" x="10" y="20">BFS — explores level by level (queue-based)</text>
+<circle cx="250" cy="50" fill="#21252F" r="20" stroke="#D4A574" stroke-width="2"></circle>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="12" font-weight="700" text-anchor="middle" x="250" y="55">1</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="10" x="320" y="45">Level 0 — visited first</text>
+<line marker-end="url(#abfs)" stroke="#7FB5B5" stroke-width="1.5" x1="234" x2="170" y1="65" y2="95"></line>
+<line marker-end="url(#abfs)" stroke="#7FB5B5" stroke-width="1.5" x1="266" x2="330" y1="65" y2="95"></line>
+<circle cx="155" cy="110" fill="#21252F" r="20" stroke="#7FB5B5"></circle>
+<text fill="#7FB5B5" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="155" y="115">2</text>
+<circle cx="345" cy="110" fill="#21252F" r="20" stroke="#7FB5B5"></circle>
+<text fill="#7FB5B5" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="345" y="115">3</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="10" x="390" y="115">Level 1</text>
+<line marker-end="url(#abfs)" stroke="#95C97A" stroke-width="1.5" x1="142" x2="105" y1="126" y2="152"></line>
+<line marker-end="url(#abfs)" stroke="#95C97A" stroke-width="1.5" x1="168" x2="205" y1="126" y2="152"></line>
+<line marker-end="url(#abfs)" stroke="#95C97A" stroke-width="1.5" x1="332" x2="295" y1="126" y2="152"></line>
+<line marker-end="url(#abfs)" stroke="#95C97A" stroke-width="1.5" x1="358" x2="395" y1="126" y2="152"></line>
+<circle cx="90" cy="165" fill="#21252F" r="18" stroke="#95C97A"></circle>
+<text fill="#95C97A" font-family="JetBrains Mono" font-size="11" text-anchor="middle" x="90" y="170">4</text>
+<circle cx="220" cy="165" fill="#21252F" r="18" stroke="#95C97A"></circle>
+<text fill="#95C97A" font-family="JetBrains Mono" font-size="11" text-anchor="middle" x="220" y="170">5</text>
+<circle cx="280" cy="165" fill="#21252F" r="18" stroke="#95C97A"></circle>
+<text fill="#95C97A" font-family="JetBrains Mono" font-size="11" text-anchor="middle" x="280" y="170">6</text>
+<circle cx="410" cy="165" fill="#21252F" r="18" stroke="#95C97A"></circle>
+<text fill="#95C97A" font-family="JetBrains Mono" font-size="11" text-anchor="middle" x="410" y="170">7</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="10" x="450" y="165">Level 2</text>
+</svg></div>
+<pre><code>// BFS template — finds SHORTEST path in unweighted graph/grid
+fun bfs(root: TreeNode?): Int {
+    if (root == null) return 0
+    val queue = ArrayDeque&lt;TreeNode&gt;()
+    queue.addLast(root)
+    var depth = 0
+    while (queue.isNotEmpty()) {
+        val size = queue.size          // process current level
+        repeat(size) {
+            val node = queue.removeFirst()
+            // Process node here
+            node.left?.let { queue.addLast(it) }
+            node.right?.let { queue.addLast(it) }
+        }
+        depth++
+    }
+    return depth
+}
+
+// BFS on grid — shortest path
+fun shortestPath(grid: Array&lt;IntArray&gt;, start: Pair&lt;Int,Int&gt;, end: Pair&lt;Int,Int&gt;): Int {
+    val queue = ArrayDeque&lt;Triple&lt;Int,Int,Int&gt;&gt;()  // row, col, steps
+    queue.addLast(Triple(start.first, start.second, 0))
+    val visited = HashSet&lt;Pair&lt;Int,Int&gt;&gt;()
+    val dirs = arrayOf(intArrayOf(0,1), intArrayOf(0,-1), intArrayOf(1,0), intArrayOf(-1,0))
+    while (queue.isNotEmpty()) {
+        val (r, c, steps) = queue.removeFirst()
+        if (r to c == end) return steps
+        if (!visited.add(r to c)) continue
+        for (d in dirs) {
+            val nr = r + d[0]; val nc = c + d[1]
+            if (nr in grid.indices &amp;&amp; nc in grid[0].indices &amp;&amp; grid[nr][nc] != 1)
+                queue.addLast(Triple(nr, nc, steps + 1))
+        }
+    }
+    return -1
+}</code></pre>
+<p><strong>Use BFS when:</strong> shortest path in unweighted graph, level-order traversal, minimum steps/moves, spreading from multiple sources simultaneously.</p></div>
+</div>
+<div class="qa" data-tags="hot high code diagram">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>DFS &amp; Backtracking — tree/graph traversal, combinations</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><div class="diagram">
+<svg viewbox="0 0 500 190" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="adfs" markerheight="8" markerwidth="8" orient="auto" refx="7" refy="3"><path d="M0,0 L0,6 L8,3 z" fill="#D4A574"></path></marker></defs>
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="11" x="10" y="20">DFS — go deep, then backtrack (call stack or explicit stack)</text>
+<circle cx="250" cy="45" fill="#21252F" r="18" stroke="#D4A574" stroke-width="2"></circle>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="250" y="50">1</text>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="10" x="5" y="50">step 1</text>
+<line marker-end="url(#adfs)" stroke="#D4A574" stroke-width="1.5" x1="236" x2="165" y1="58" y2="90"></line>
+<line stroke="#2A2F3A" stroke-width="1.5" x1="264" x2="335" y1="58" y2="90"></line>
+<circle cx="150" cy="105" fill="#21252F" r="18" stroke="#D4A574" stroke-width="2"></circle>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="150" y="110">2</text>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="10" x="5" y="110">step 2</text>
+<circle cx="350" cy="105" fill="#21252F" r="18" stroke="#2A2F3A"></circle>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="350" y="110">5</text>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="10" x="380" y="110">(not yet)</text>
+<line marker-end="url(#adfs)" stroke="#D4A574" stroke-width="1.5" x1="138" x2="105" y1="120" y2="148"></line>
+<line stroke="#2A2F3A" stroke-width="1.5" x1="162" x2="195" y1="120" y2="148"></line>
+<circle cx="90" cy="162" fill="#21252F" r="18" stroke="#D4A574" stroke-width="2"></circle>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="90" y="167">3</text>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="10" x="5" y="162">step 3</text>
+<circle cx="210" cy="162" fill="#21252F" r="18" stroke="#2A2F3A"></circle>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="12" text-anchor="middle" x="210" y="167">4</text>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="220" y="185">← backtrack from leaf 3 → visit 4 → backtrack → visit 5</text>
+</svg></div>
+<pre><code>// DFS template — recursive
+fun dfs(node: TreeNode?) {
+    if (node == null) return   // base case
+    // Pre-order: process HERE
+    println(node.val)
+    dfs(node.left)
+    // In-order: process HERE (gives sorted order for BST)
+    dfs(node.right)
+    // Post-order: process HERE (children done, now process parent)
+}
+
+// Backtracking template — generate all combinations
+fun combine(n: Int, k: Int): List&lt;List&lt;Int&gt;&gt; {
+    val result = mutableListOf&lt;List&lt;Int&gt;&gt;()
+    fun backtrack(start: Int, current: MutableList&lt;Int&gt;) {
+        if (current.size == k) { result.add(current.toList()); return }
+        for (i in start..n) {
+            current.add(i)        // choose
+            backtrack(i + 1, current)  // explore
+            current.removeLast()  // un-choose (backtrack)
+        }
+    }
+    backtrack(1, mutableListOf())
+    return result
+}</code></pre>
+<div class="pattern-grid">
+<div class="pattern-card"><strong>DFS on trees</strong><ul><li>Max depth, path sum</li><li>Validate BST, LCA</li><li>Serialize/Deserialize tree</li></ul></div>
+<div class="pattern-card"><strong>Backtracking</strong><ul><li>Subsets, Combinations, Permutations</li><li>Word Search (grid DFS)</li><li>Sudoku Solver, N-Queens</li></ul></div>
+</div></div>
+</div>
+<div class="qa" data-tags="hot high code diagram">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Dynamic Programming — recognizing it and the two approaches</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><div class="diagram">
+<svg viewbox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+<text fill="#9CA0AB" font-family="JetBrains Mono" font-size="11" x="10" y="20">DP — build answer from overlapping subproblems (memoization table)</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" x="10" y="40">Fibonacci: dp[n] = dp[n-1] + dp[n-2]</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#95C97A" width="40" x="10" y="52"></rect>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="30" y="64">dp[0]</text>
+<text fill="#95C97A" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="30" y="76">0</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#95C97A" width="40" x="58" y="52"></rect>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="78" y="64">dp[1]</text>
+<text fill="#95C97A" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="78" y="76">1</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#7FB5B5" width="40" x="106" y="52"></rect>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="126" y="64">dp[2]</text>
+<text fill="#7FB5B5" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="126" y="76">1</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#7FB5B5" width="40" x="154" y="52"></rect>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="174" y="64">dp[3]</text>
+<text fill="#7FB5B5" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="174" y="76">2</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#D4A574" width="40" x="202" y="52"></rect>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="222" y="64">dp[4]</text>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="222" y="76">3</text>
+<rect fill="#21252F" height="32" rx="4" stroke="#D4A574" width="40" x="250" y="52"></rect>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="270" y="64">dp[5]</text>
+<text fill="#D4A574" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle" x="270" y="76">5</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" x="10" y="108">Each cell computed ONCE and reused. No repeated recursion.</text>
+<text fill="#9CA0AB" font-family="Geist" font-size="11" x="10" y="128">Without DP: O(2ⁿ) | With DP: O(n) time, O(n) space → O(1) with 2-var optimization</text>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="10" x="10" y="155">DP recognition: optimal substructure + overlapping subproblems</text>
+<text fill="#6B6F7A" font-family="JetBrains Mono" font-size="10" x="10" y="170">Usually: count/min/max/yes/no questions on a sequence or grid</text>
+</svg></div>
+<p><strong>Recognize DP when:</strong> optimization (min/max), counting (how many ways), decision (can we achieve X), and the problem has overlapping subproblems (recursive approach re-solves same states).</p>
+<pre><code>// Top-down (memoization) — natural recursive thinking
+fun climbStairs(n: Int, memo: HashMap&lt;Int,Int&gt; = HashMap()): Int {
+    if (n &lt;= 2) return n
+    return memo.getOrPut(n) { climbStairs(n-1, memo) + climbStairs(n-2, memo) }
+}
+
+// Bottom-up (tabulation) — usually faster (no stack overhead)
+fun climbStairsDP(n: Int): Int {
+    val dp = IntArray(n + 1)
+    dp[1] = 1; if (n &gt; 1) dp[2] = 2
+    for (i in 3..n) dp[i] = dp[i-1] + dp[i-2]
+    return dp[n]
+}
+
+// Space-optimized — O(1) space when only last 2 states needed
+fun climbStairsOpt(n: Int): Int {
+    var prev = 1; var curr = 2
+    for (i in 3..n) { val next = prev + curr; prev = curr; curr = next }
+    return if (n == 1) 1 else curr
+}</code></pre>
+<div class="pattern-grid">
+<div class="pattern-card"><strong>1D DP</strong><ul><li>Climbing Stairs, House Robber</li><li>Coin Change (min coins)</li><li>Longest Increasing Subsequence</li></ul></div>
+<div class="pattern-card"><strong>2D DP</strong><ul><li>Unique Paths (grid)</li><li>Longest Common Subsequence</li><li>0/1 Knapsack</li><li>Edit Distance</li></ul></div>
+</div></div>
+</div>
+<div class="qa" data-tags="hot high code">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Trees — must-know traversals and BST properties</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><pre><code>// All traversals of a binary tree
+fun inorder(root: TreeNode?): List&lt;Int&gt; {    // Left → Root → Right (BST sorted order)
+    val result = mutableListOf&lt;Int&gt;()
+    fun dfs(node: TreeNode?) {
+        if (node == null) return
+        dfs(node.left)
+        result.add(node.`val`)
+        dfs(node.right)
+    }
+    dfs(root); return result
+}
+
+// Iterative inorder (avoids stack overflow on deep trees)
+fun inorderIterative(root: TreeNode?): List&lt;Int&gt; {
+    val result = mutableListOf&lt;Int&gt;()
+    val stack = ArrayDeque&lt;TreeNode&gt;()
+    var curr = root
+    while (curr != null || stack.isNotEmpty()) {
+        while (curr != null) { stack.addLast(curr); curr = curr.left }
+        curr = stack.removeLast()
+        result.add(curr.`val`)
+        curr = curr.right
+    }
+    return result
+}
+
+// Validate BST — pass min/max range down
+fun isValidBST(node: TreeNode?, min: Long = Long.MIN_VALUE, max: Long = Long.MAX_VALUE): Boolean {
+    if (node == null) return true
+    if (node.`val` &lt;= min || node.`val` &gt;= max) return false
+    return isValidBST(node.left, min, node.`val`.toLong()) &amp;&amp;
+           isValidBST(node.right, node.`val`.toLong(), max)
+}
+
+// Lowest Common Ancestor
+fun lowestCommonAncestor(root: TreeNode?, p: TreeNode?, q: TreeNode?): TreeNode? {
+    if (root == null || root == p || root == q) return root
+    val left = lowestCommonAncestor(root.left, p, q)
+    val right = lowestCommonAncestor(root.right, p, q)
+    return if (left != null &amp;&amp; right != null) root else left ?: right
+}</code></pre>
+<div class="pattern-grid">
+<div class="pattern-card"><strong>Tree problems</strong><ul><li>Max/Min depth (BFS or DFS)</li><li>Path sum (DFS target tracking)</li><li>Symmetric / Same tree</li><li>Invert binary tree</li></ul></div>
+<div class="pattern-card"><strong>BST specific</strong><ul><li>Validate BST</li><li>BST to sorted array (inorder)</li><li>LCA in BST (navigate by value)</li><li>Kth Smallest (inorder k-th)</li></ul></div>
+</div></div>
+</div>
+<div class="qa" data-tags="hot high code">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Heap / Priority Queue — Top K and median problems</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><p><strong>Recognize when:</strong> "find K largest/smallest", "Kth largest", "median from stream", "most frequent K elements", "merge K sorted lists".</p>
+<pre><code>// Kotlin: PriorityQueue is min-heap by default
+val minHeap = PriorityQueue&lt;Int&gt;()            // smallest at top
+val maxHeap = PriorityQueue&lt;Int&gt;(reverseOrder()) // largest at top
+
+// Pattern: Kth Largest Element — maintain min-heap of size K
+fun findKthLargest(nums: IntArray, k: Int): Int {
+    val heap = PriorityQueue&lt;Int&gt;()
+    for (n in nums) {
+        heap.offer(n)
+        if (heap.size &gt; k) heap.poll()  // remove smallest, keep K largest
+    }
+    return heap.peek()!!   // O(n log k) — better than O(n log n) sort
+}
+
+// Pattern: Top K Frequent Elements
+fun topKFrequent(nums: IntArray, k: Int): IntArray {
+    val freq = HashMap&lt;Int,Int&gt;()
+    nums.forEach { freq[it] = (freq[it] ?: 0) + 1 }
+    // Min-heap sorted by frequency
+    val heap = PriorityQueue&lt;Map.Entry&lt;Int,Int&gt;&gt;(compareBy { it.value })
+    for (entry in freq.entries) {
+        heap.offer(entry)
+        if (heap.size &gt; k) heap.poll()
+    }
+    return heap.map { it.key }.toIntArray()
+}
+
+// Pattern: Merge K Sorted Lists
+// Put first node of each list into min-heap, always extract min, push next node</code></pre>
+<div class="pattern-grid">
+<div class="pattern-card"><strong>Min-heap (keep K largest)</strong><ul><li>Kth Largest Element in Stream</li><li>Top K Frequent Elements</li><li>K Closest Points to Origin</li></ul></div>
+<div class="pattern-card"><strong>Two heaps (median)</strong><ul><li>Max-heap (left half) + Min-heap (right half)</li><li>Median from Data Stream</li><li>Sliding Window Median</li></ul></div>
+</div></div>
+</div>
+<div class="qa" data-tags="hot high code">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>LRU Cache — implement it (most common mobile-flavored coding question)</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><p>Least Recently Used cache — when full, evicts the item that was accessed the longest time ago. Needs O(1) get AND put.</p>
+<p><strong>Data structure:</strong> HashMap (O(1) lookup) + Doubly Linked List (O(1) remove from middle, O(1) add to front).</p>
+<pre><code>class LRUCache(private val capacity: Int) {
+    // Doubly linked list node
+    inner class Node(val key: Int, var value: Int) {
+        var prev: Node? = null; var next: Node? = null
+    }
+
+    private val map = HashMap&lt;Int, Node&gt;(capacity)
+    // Dummy head/tail — no null checks needed
+    private val head = Node(-1, -1)
+    private val tail = Node(-1, -1)
+
+    init { head.next = tail; tail.prev = head }
+
+    // Always insert right after head (most recent)
+    private fun insertFront(node: Node) {
+        node.next = head.next; node.prev = head
+        head.next!!.prev = node; head.next = node
+    }
+
+    // Remove from current position
+    private fun remove(node: Node) {
+        node.prev!!.next = node.next
+        node.next!!.prev = node.prev
+    }
+
+    fun get(key: Int): Int {
+        val node = map[key] ?: return -1
+        remove(node); insertFront(node)  // mark as recently used
+        return node.value
+    }
+
+    fun put(key: Int, value: Int) {
+        map[key]?.let { remove(it) }     // update if exists
+        val node = Node(key, value)
+        map[key] = node; insertFront(node)
+        if (map.size &gt; capacity) {       // evict LRU (just before tail)
+            val lru = tail.prev!!
+            remove(lru); map.remove(lru.key)
+        }
+    }
+}  // All ops O(1)</code></pre></div>
+</div>
+<div class="qa" data-tags="hot high code">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Graph algorithms — connected components, cycle detection</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><pre><code>// Graph representation
+val graph = HashMap&lt;Int, MutableList&lt;Int&gt;&gt;()  // adjacency list
+
+// Number of connected components (Union-Find approach)
+class UnionFind(n: Int) {
+    val parent = IntArray(n) { it }
+    val rank = IntArray(n) { 0 }
+    var components = n
+
+    fun find(x: Int): Int {
+        if (parent[x] != x) parent[x] = find(parent[x])  // path compression
+        return parent[x]
+    }
+
+    fun union(x: Int, y: Int) {
+        val px = find(x); val py = find(y)
+        if (px == py) return
+        components--
+        if (rank[px] &lt; rank[py]) parent[px] = py          // union by rank
+        else if (rank[px] &gt; rank[py]) parent[py] = px
+        else { parent[py] = px; rank[px]++ }
+    }
+}
+
+// Cycle detection in directed graph (DFS + coloring)
+fun hasCycle(graph: Map&lt;Int, List&lt;Int&gt;&gt;): Boolean {
+    // 0=white(unvisited), 1=gray(in stack), 2=black(done)
+    val color = HashMap&lt;Int, Int&gt;()
+    fun dfs(node: Int): Boolean {
+        color[node] = 1   // mark as in-progress
+        for (neighbor in graph[node] ?: emptyList()) {
+            if (color[neighbor] == 1) return true      // back edge = cycle!
+            if (color[neighbor] != 2 &amp;&amp; dfs(neighbor)) return true
+        }
+        color[node] = 2; return false  // done
+    }
+    return graph.keys.any { color[it] == 0 &amp;&amp; dfs(it) }
+}</code></pre>
+<div class="pattern-grid">
+<div class="pattern-card"><strong>BFS graphs</strong><ul><li>Shortest path unweighted</li><li>Level order / spreading</li><li>Bipartite check (2-coloring)</li></ul></div>
+<div class="pattern-card"><strong>DFS graphs</strong><ul><li>Connected components</li><li>Cycle detection</li><li>Topological sort (Kahn's or DFS)</li></ul></div>
+</div></div>
+</div>
+<div class="qa" data-tags="high code">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Sorting algorithms — when to use which</div>
+<div class="qa-tags"></div><span class="toggle">+</span></div>
+<div class="qa-body"><table><thead><tr><th>Algorithm</th><th>Time (avg)</th><th>Time (worst)</th><th>Space</th><th>Stable?</th><th>Use when</th></tr></thead><tbody>
+<tr><td><strong>Merge Sort</strong></td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>✅</td><td>Need stable sort; linked lists; external sort</td></tr>
+<tr><td><strong>Quick Sort</strong></td><td>O(n log n)</td><td>O(n²)</td><td>O(log n)</td><td>❌</td><td>In-practice fastest for arrays; randomize pivot</td></tr>
+<tr><td><strong>Heap Sort</strong></td><td>O(n log n)</td><td>O(n log n)</td><td>O(1)</td><td>❌</td><td>In-place, guaranteed O(n log n)</td></tr>
+<tr><td><strong>Counting Sort</strong></td><td>O(n + k)</td><td>O(n + k)</td><td>O(k)</td><td>✅</td><td>Small integer range (k = range size)</td></tr>
+<tr><td><strong>Bucket Sort</strong></td><td>O(n + k)</td><td>O(n²)</td><td>O(n)</td><td>✅</td><td>Uniformly distributed floats</td></tr>
+</tbody></table>
+<pre><code>// Merge Sort — classic divide and conquer
+fun mergeSort(arr: IntArray): IntArray {
+    if (arr.size &lt;= 1) return arr
+    val mid = arr.size / 2
+    val left = mergeSort(arr.sliceArray(0 until mid))
+    val right = mergeSort(arr.sliceArray(mid until arr.size))
+    return merge(left, right)
+}
+
+fun merge(left: IntArray, right: IntArray): IntArray {
+    val result = IntArray(left.size + right.size)
+    var i = 0; var j = 0; var k = 0
+    while (i &lt; left.size &amp;&amp; j &lt; right.size)
+        result[k++] = if (left[i] &lt;= right[j]) left[i++] else right[j++]
+    while (i &lt; left.size) result[k++] = left[i++]
+    while (j &lt; right.size) result[k++] = right[j++]
+    return result
+}</code></pre>
+<div class="callout"><strong>Interview answer:</strong> "Kotlin's <code>sortedBy</code> uses TimSort (merge + insertion sort) — O(n log n) worst, stable. I'd use it for general sorting. For small integer ranges I'd consider counting sort."</div></div>
+</div>
+<div class="qa" data-tags="hot high code">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Mobile-flavored: Implement a debounce function</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><p>Debounce: delay execution until N milliseconds after the last call. Classic interview question for mobile engineers.</p>
+<pre><code>// Kotlin / Android implementation
+class Debouncer(private val delayMs: Long = 300L) {
+    private var job: Job? = null
+
+    fun debounce(scope: CoroutineScope, action: suspend () -&gt; Unit) {
+        job?.cancel()
+        job = scope.launch {
+            delay(delayMs)
+            action()
+        }
+    }
+}
+
+// Usage
+val debouncer = Debouncer(300L)
+searchField.doOnTextChanged { text, _, _, _ -&gt;
+    debouncer.debounce(viewModelScope) {
+        viewModel.search(text.toString())
+    }
+}
+
+// Flow-based debounce (cleaner for search-as-you-type)
+queryFlow
+    .debounce(300L)
+    .distinctUntilChanged()
+    .flatMapLatest { q -&gt; api.search(q) }
+    .collect { showResults(it) }
+
+// Pure function version (no coroutines — for JavaScript-style answer)
+fun debounce(fn: () -&gt; Unit, delay: Long): () -&gt; Unit {
+    var handler: Job? = null
+    return {
+        handler?.cancel()
+        handler = GlobalScope.launch {
+            delay(delay); fn()
+        }
+    }
+}</code></pre></div>
+</div>
+<div class="qa" data-tags="hot high">
+<div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Common patterns cheat sheet — which pattern for which problem signal</div>
+<div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div>
+<div class="qa-body"><table><thead><tr><th>Problem signal</th><th>Pattern to try first</th></tr></thead><tbody>
+<tr><td>Sorted array + find pair/triplet</td><td><strong>Two Pointers</strong></td></tr>
+<tr><td>Subarray/substring + constraint (longest/shortest)</td><td><strong>Sliding Window</strong></td></tr>
+<tr><td>"Search in sorted…"</td><td><strong>Binary Search</strong></td></tr>
+<tr><td>"Seen before?" or counting duplicates/frequencies</td><td><strong>HashMap</strong></td></tr>
+<tr><td>Balanced parentheses, "next greater element"</td><td><strong>Stack / Monotonic Stack</strong></td></tr>
+<tr><td>Tree traversal, shortest path, level by level</td><td><strong>BFS (queue)</strong></td></tr>
+<tr><td>Tree path, all combinations, backtracking</td><td><strong>DFS / Recursion</strong></td></tr>
+<tr><td>Minimum/maximum/count with overlapping subproblems</td><td><strong>Dynamic Programming</strong></td></tr>
+<tr><td>K largest/smallest/most frequent</td><td><strong>Heap / Priority Queue</strong></td></tr>
+<tr><td>Intervals (overlap, merge, insert)</td><td><strong>Sort + Greedy</strong></td></tr>
+<tr><td>Connected components, union groups</td><td><strong>Union-Find or BFS/DFS</strong></td></tr>
+<tr><td>O(1) get and evict on capacity</td><td><strong>HashMap + Doubly Linked List (LRU)</strong></td></tr>
+<tr><td>Words with common prefix</td><td><strong>Trie</strong></td></tr>
+<tr><td>Divide array into equal halves, sort</td><td><strong>Merge Sort / Divide &amp; Conquer</strong></td></tr>
+</tbody></table>
+<div class="callout tip"><strong>Interview meta:</strong> when you see a problem, say aloud "The signal here is [X], which suggests [pattern]. Let me verify: [walk through example]." This shows pattern recognition, not memorization.</div></div>
+</div>
+</section>
+<section class="topic" data-section="Anti-Patterns &amp; Best Practices" id="antipatterns"><div class="topic-header"><span class="topic-num">★</span><h2>Anti-Patterns &amp; Best Practices</h2></div><p class="topic-intro">The explicit "things to avoid and why" guide. Android, Compose, architecture, security, RN, and testing anti-patterns. Plus production checklist, code review red flags, and interview meta.</p>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Android anti-patterns — top 10 things never to do</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><ol><li><strong>Network/disk I/O on Main thread</strong> → ANR within 5s. Always use coroutines + IO dispatcher.</li><li><strong>Inner class holding Activity reference</strong> → memory leak. Use static nested class + WeakReference, or coroutines.</li><li><strong>God Activity / God Fragment</strong> → unmaintainable. Move logic to ViewModel + UseCases.</li><li><strong>Passing large objects in Intents/Bundles</strong> → TransactionTooLargeException (&gt;1MB). Use a shared ViewModel or Room.</li><li><strong>notifyDataSetChanged() every update</strong> → full RecyclerView redraw. Use DiffUtil or ListAdapter.</li><li><strong>Hardcoded strings</strong> → untranslatable, no i18n. Use string resources always.</li><li><strong>Storing sensitive data in SharedPreferences</strong> → unencrypted. Use EncryptedSharedPreferences or Keystore.</li><li><strong>Registering broadcast receivers without unregistering</strong> → leak. Always unregister in onStop/onDestroy.</li><li><strong>GlobalScope.launch { }</strong> → leaked coroutines with no lifecycle. Use viewModelScope or lifecycleScope.</li><li><strong>Static context references</strong> → memory leak. Application context for long-lived; Activity context only for UI.</li></ol></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Compose anti-patterns — common mistakes that hurt performance or correctness</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>Reading state in wrong phase:</strong> reading animated state in Composition causes recomposition every frame. Read in graphicsLayer { } for Drawing-phase reads.</li><li><strong>Unstable parameters:</strong> passing <code>List&lt;T&gt;</code> directly causes recomposition even when unchanged. Wrap with <code>@Immutable</code> or use <code>ImmutableList</code>.</li><li><strong>Creating objects in composable bodies:</strong> <code>val brush = Brush.gradient(...)</code> inside a composable creates a new object every recomposition. Use <code>remember { }</code>.</li><li><strong>LaunchedEffect without proper keys:</strong> <code>LaunchedEffect(Unit)</code> runs once. <code>LaunchedEffect(userId)</code> re-runs when userId changes. Wrong key = stale or over-triggering.</li><li><strong>Calling suspend fns directly in composable body:</strong> composables are not coroutines. Use <code>LaunchedEffect</code> or <code>produceState</code>.</li><li><strong>Modifier.clickable without ripple handling:</strong> add <code>indication = rememberRipple()</code> or null explicitly.</li><li><strong>Ignoring stability annotations:</strong> not annotating ViewModel-exposed data classes with <code>@Stable</code> prevents smart-skipping.</li></ul><pre><code>// ❌ Creates new list each recomposition
+@Composable fun Foo(items: List&lt;Item&gt;) { /* unstable */ }
+
+// ✅ Wrap or use ImmutableList
+@Immutable data class Items(val list: List&lt;Item&gt;)
+@Composable fun Foo(items: Items) { /* stable */ }</code></pre></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Architecture anti-patterns — violations that hurt long-term</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>ViewModel that knows about Views:</strong> ViewModel should never hold Context, View, or Activity references. It outlives the Activity. Use SharedFlow for UI events.</li><li><strong>Repository talking to UI:</strong> Repository returns raw data (or Flow). ViewModel transforms it. UI only reads ViewModel state. Never skip layers.</li><li><strong>Multiple sources of truth:</strong> if Room AND a cache AND a ViewModel variable all hold "the current user", they'll diverge. SSOT = one place per piece of data.</li><li><strong>Network calls in UI layer:</strong> Composables/Fragments/Activities calling APIs directly. All async work belongs in ViewModel or Repository.</li><li><strong>Circular dependencies between modules:</strong> feature:home depends on feature:profile which depends on feature:home. Break via :core:navigation interfaces.</li><li><strong>UseCases that just delegate:</strong> <code>class GetUserUseCase { fun get(id) = repo.get(id) }</code> — pure delegation with no business logic adds layers without value. Only add UseCases when there's logic to encapsulate.</li></ul></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Performance anti-patterns — what makes apps slow</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>Synchronous work on Main thread:</strong> any blocking call over ~5ms is visible as jank. Move to Dispatchers.IO or Default.</li><li><strong>Overdraw:</strong> multiple layers painting the same pixels. Remove unnecessary backgrounds, use <code>clipToPadding</code>, check with GPU overdraw overlay.</li><li><strong>Not using the right Dispatcher:</strong> CPU-heavy work on <code>Dispatchers.IO</code> (meant for I/O wait) — uses threads unnecessarily. CPU work → <code>Dispatchers.Default</code>.</li><li><strong>Bitmap allocated at full resolution:</strong> decoding a 4K image for a 200dp thumbnail. Always sample down with <code>inSampleSize</code> or let Coil/Glide size it.</li><li><strong>Not using Baseline Profiles:</strong> Compose-heavy apps see 20-40% startup improvement from pre-compiling hot paths.</li><li><strong>Allocating in draw/measure:</strong> creating objects in <code>onDraw()</code> or custom Compose draw lambdas → GC pressure during rendering. Allocate once in <code>remember { }</code>.</li><li><strong>Blocking StateFlow/SharedFlow with slow collectors:</strong> a slow UI collecting a high-frequency StateFlow can back up. Use <code>conflate()</code> or <code>collectLatest</code>.</li></ul></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Security anti-patterns — vulnerabilities you introduce unknowingly</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>Logging sensitive data:</strong> tokens, passwords, PII in Logcat. Extractable via adb on debug builds. Strip all sensitive logging before release.</li><li><strong>Hardcoded secrets in source code:</strong> API keys in strings.xml or BuildConfig. APKs are decompilable — anyone can extract them. Move to backend proxy.</li><li><strong>Trusting all SSL certificates:</strong> <code>TrustManager { override fun checkServerTrusted() {} }</code> — accepts anything, enables MITM. Never do this, even for debugging.</li><li><strong>Implicit intents for sensitive actions:</strong> other apps can intercept. Always use explicit intents for sensitive operations.</li><li><strong>SQL concatenation:</strong> <code>"SELECT * WHERE id = " + userInput</code> → SQL injection. Always parameterized queries (Room does this by default).</li><li><strong>Storing tokens in SharedPreferences:</strong> unencrypted, world-readable on rooted devices. Use EncryptedSharedPreferences or Keystore.</li><li><strong>android:debuggable="true" in release:</strong> allows ADB debugging of production app. Ensure <code>buildTypes { release { isDebuggable = false } }</code>.</li><li><strong>android:allowBackup="true" for sensitive apps:</strong> allows ADB to back up your private data. Set to false for banking/health/auth apps.</li></ul></div></div>
+<div class="qa" data-tags="high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>React Native anti-patterns — common mistakes from native Android perspective</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>Heavy computation on JS thread:</strong> JS thread = UI thread equivalent. Crypto, sorting 10K items, complex transforms → use native module or <code>InteractionManager.runAfterInteractions()</code>.</li><li><strong>Using ScrollView for large dynamic lists:</strong> renders ALL children at once. Always use <code>FlatList</code> (virtualizes like RecyclerView).</li><li><strong>Anonymous functions as props:</strong> <code>onPress={() =&gt; doSomething()}</code> creates a new function reference every render → unnecessary re-renders. Use <code>useCallback</code>.</li><li><strong>setState in a loop or animation frame:</strong> each setState triggers a re-render. Use Reanimated for animations (runs on UI thread via JSI).</li><li><strong>Missing key prop in lists:</strong> React can't identify which items changed → full re-render. Always provide stable, unique <code>key</code>.</li><li><strong>Not cleaning up effects:</strong> subscriptions, event listeners in useEffect without cleanup return → memory leaks surviving unmount.</li><li><strong>useNativeDriver: false on animations:</strong> JS-thread animations drop frames on slow devices. Most animations can use <code>useNativeDriver: true</code>.</li></ul></div></div>
+<div class="qa" data-tags="high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Testing anti-patterns — what makes tests brittle and useless</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>Testing implementation, not behavior:</strong> if your test breaks every time you refactor (without changing behavior), it's testing internals. Test what the user/caller sees.</li><li><strong>Mocking what you don't own:</strong> mocking <code>Retrofit</code> or <code>OkHttp</code> directly — if they change behavior, your tests won't catch it. Use fakes or integration tests for external deps.</li><li><strong>Fixture bloat:</strong> tests with 50 lines of setup before the assertion. Extract a <code>TestFixtures</code> builder. Test readability matters.</li><li><strong>Thread.sleep() in tests:</strong> brittle on slow CI, passes locally, fails in pipeline. Use <code>TestCoroutineDispatcher</code> and <code>advanceTimeBy()</code>.</li><li><strong>One enormous integration test instead of unit tests:</strong> slow, hard to debug, tests too many things. Prefer small, fast units.</li><li><strong>Asserting on irrelevant details:</strong> test verifies 10 things when only 1 matters → maintenance burden when unrelated fields change.</li><li><strong>Not testing edge cases:</strong> empty list, null, single item, max value, error state. Bugs live at boundaries.</li></ul></div></div>
+<div class="qa" data-tags="high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Things to always do — senior engineering habits</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>Write the test first (or immediately after):</strong> code written to be tested is better-designed code.</li><li><strong>Read the error message fully</strong> before Googling. Most bugs are explained in the stack trace.</li><li><strong>Measure before optimizing:</strong> profile first, optimize the actual bottleneck, not where you think it is.</li><li><strong>Handle all error states in UI:</strong> Loading, Empty, Error, Success — all four, not just Success.</li><li><strong>Use the same API you expose:</strong> write real usage code before finalizing an interface design.</li><li><strong>Document the WHY, not the WHAT:</strong> the code says what. Comments explain why a non-obvious choice was made.</li><li><strong>Check for memory leaks in debug builds:</strong> LeakCanary integrated always. Fix leaks before they reach production.</li><li><strong>Review your own PR before requesting review:</strong> you catch 80% of comments yourself.</li></ul></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Code review red flags — things to never merge</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><code>TODO: fix this</code> without a linked ticket — will never be fixed</li><li><code>Thread.sleep(500)</code> in production code — timing dependency, not a real fix</li><li><code>catch (e: Exception) { }</code> — swallowed exception, silent failure</li><li><code>!!`</code> on anything not provably non-null — potential NullPointerException bomb</li><li>Non-null assertion on user input or API response — will crash in production</li><li>Business logic in a Fragment or Activity — untestable, wrong layer</li><li>Hardcoded strings, colors, or dimensions — localization and theming break</li><li>New dependency added without justification — bundle size, security surface, license</li><li>Logging PII or tokens — security vulnerability</li><li>Test deleted "because it was failing" — hiding a real bug</li></ul></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Production readiness checklist — before you ship</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><ul><li>All error states handled (loading, empty, error, network-offline)</li><li>No TODO/FIXME without a tracking ticket</li><li><code>isDebuggable = false</code> in release build type</li><li>Sensitive data NOT in Logcat (search for PII/token in log statements)</li><li>ProGuard/R8 enabled and tested on release variant</li><li>Network Security Config blocks cleartext traffic</li><li>API keys NOT in source code or BuildConfig fields</li><li>Crash reporting (Crashlytics) integrated and tested</li><li>Analytics events fired for key user flows</li><li>Feature flags wrapping new features (kill switch available)</li><li>Accessibility: all images have contentDescription, contrast 4.5:1+</li><li>Battery: no wake locks held unnecessarily, background work via WorkManager</li><li>Memory: LeakCanary clean on debug build, no OOM on large lists</li><li>Offline: app degrades gracefully without network</li></ul></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>State management anti-patterns</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>Multiple sources of truth:</strong> same data in Room AND a ViewModel variable AND a local var. Pick one — Room.</li><li><strong>setState from non-main thread:</strong> StateFlow update from background thread without <code>withContext(Dispatchers.Main)</code> in non-coroutine code.</li><li><strong>Exposing MutableStateFlow from ViewModel:</strong> UI can modify state directly. Always expose as <code>StateFlow</code> (immutable) from ViewModel.</li><li><strong>Storing UI ephemeral state in ViewModel:</strong> scroll position, focus state, animation values belong in Compose/View layer with <code>rememberSaveable</code>.</li><li><strong>Using SharedFlow for UI state:</strong> SharedFlow doesn't have a current value — new collectors miss previous emissions. Use StateFlow for state, SharedFlow only for one-shot events.</li><li><strong>Not handling process death:</strong> ViewModel state survives rotation but not process death. Use SavedStateHandle for anything that must survive.</li></ul><pre><code>// ❌ Exposed mutable
+val _state = MutableStateFlow(UiState())
+val state = _state  // still MutableStateFlow!
+
+// ✅ Properly sealed
+val _state = MutableStateFlow(UiState())
+val state: StateFlow&lt;UiState&gt; = _state.asStateFlow()  // read-only</code></pre></div></div>
+<div class="qa" data-tags="high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>API consumption best practices on mobile</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>Always handle HTTP error codes:</strong> 401 → refresh token or re-login. 429 → back off and retry. 503 → retry with exponential backoff. 400 → don't retry, show error.</li><li><strong>Validate API responses:</strong> don't trust the server to return the expected shape. Null-safe parsing, graceful degradation on unexpected fields.</li><li><strong>Cache aggressively, invalidate deliberately:</strong> don't refetch on every screen open. Cache with TTL, invalidate on explicit user action or event.</li><li><strong>Batch requests where possible:</strong> 10 individual calls vs 1 batch call. Design your API (or BFF) to support batching.</li><li><strong>Use idempotency keys for mutations:</strong> any POST that creates or modifies should be retryable without side effects.</li><li><strong>Log every outgoing request in debug:</strong> OkHttp <code>HttpLoggingInterceptor</code>. Strip in release builds.</li><li><strong>Set timeouts:</strong> no timeout = potential infinite hang. Set connect, read, and write timeouts on OkHttpClient.</li></ul></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>How to discuss trade-offs in a technical interview</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><p>Senior engineers are expected to know the trade-offs, not just the "right answer". Every design choice has costs.</p><p><strong>Framework for any trade-off question:</strong></p><ol><li>Name both options clearly: "Option A is X, Option B is Y"</li><li>State what each optimizes for: "A optimizes for speed, B for correctness"</li><li>State the cost: "A trades off consistency, B trades off throughput"</li><li>Give your recommendation WITH context: "For this use case (high write volume, eventual consistency OK), I'd choose A because..."</li></ol><p><strong>Examples you should know cold:</strong></p><ul><li>REST vs GraphQL → simplicity vs flexibility</li><li>Normalization vs denormalization → consistency vs read performance</li><li>Optimistic UI vs pessimistic → UX speed vs correctness</li><li>Native vs cross-platform → performance vs development speed</li><li>SQL vs NoSQL → ACID vs scale/flexibility</li><li>Caching vs always-fresh → performance vs staleness</li></ul><div class="callout"><strong>Red flag to avoid:</strong> "It depends" without following up. That's an incomplete answer. Always say: "It depends on X — if X is true, I'd choose A because... If Y, then B because..."</div></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Interview meta — handling tough questions and staying calm</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><p><strong>When you don't know the answer:</strong></p><p>Say: "I haven't worked with that specific technology, but let me reason through it from first principles..."</p><p>Never: sit silent, make something up, or say "I don't know" and stop there.</p><p><strong>When you're stuck on a coding problem:</strong></p><ol><li>Say "Let me think through this out loud..."</li><li>Restate what you know and what you need</li><li>Try a simpler version of the problem first</li><li>Ask "Is it OK if I start with a brute-force approach and optimize?"</li></ol><p><strong>Time management in coding rounds (45 min):</strong></p><ul><li>0-5 min: understand + clarify + examples</li><li>5-10 min: think out loud, pick approach</li><li>10-30 min: code, talk through logic</li><li>30-40 min: trace through examples, fix bugs</li><li>40-45 min: complexity analysis + follow-up discussion</li></ul><p><strong>Things that signal seniority:</strong></p><ul><li>Ask about constraints before coding (input size, time budget, device constraints)</li><li>State complexity before and after optimization ("this is O(n²), I can do O(n) with a hashmap")</li><li>Discuss trade-offs unprompted</li><li>Ask about production considerations ("how would this handle 10M users?")</li></ul></div></div>
+</section>
+<section class="topic" data-section="API Types &amp; Real-Time Patterns" id="apitypes"><div class="topic-header"><span class="topic-num">★</span><h2>API Types &amp; Real-Time Patterns</h2></div><p class="topic-intro">REST vs GraphQL vs gRPC vs WebSocket vs SSE vs long polling — with code. When to choose each, rate limiting, API gateway, BFF patterns.</p>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>API types — REST vs GraphQL vs gRPC vs WebSocket vs SSE vs Long Polling</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th>Type</th><th>Protocol</th><th>Direction</th><th>Best for</th><th>Android</th></tr></thead><tbody><tr><td><strong>REST</strong></td><td>HTTP/1.1-3</td><td>Req → Resp</td><td>CRUD, most APIs</td><td>Retrofit + OkHttp</td></tr><tr><td><strong>GraphQL</strong></td><td>HTTP</td><td>Req → Resp</td><td>Flexible queries, avoid over-fetch</td><td>Apollo Kotlin</td></tr><tr><td><strong>gRPC</strong></td><td>HTTP/2</td><td>Req + Streaming</td><td>Microservices, binary perf</td><td>gRPC-Kotlin</td></tr><tr><td><strong>WebSocket</strong></td><td>TCP upgrade</td><td>Bidirectional</td><td>Chat, live updates, gaming</td><td>OkHttp WS</td></tr><tr><td><strong>SSE</strong></td><td>HTTP/1.1+</td><td>Server → Client</td><td>Live feeds, progress, notifications</td><td>OkHttp + EventSource</td></tr><tr><td><strong>Long Polling</strong></td><td>HTTP</td><td>Simulated push</td><td>WebSocket fallback</td><td>Retrofit + loop</td></tr></tbody></table><div class="callout"><strong>Decision rule:</strong> full-duplex (both sides send) → WebSocket. Server-to-client only → SSE (simpler). High-perf microservice → gRPC. Standard CRUD → REST. Mobile client needs exact fields → GraphQL.</div></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>gRPC on Android — Protobuf, 4 communication patterns, implementation</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>// 1. Define service in .proto file
+syntax = "proto3";
+service UserService {
+  rpc GetUser (UserRequest) returns (UserResponse);               // Unary
+  rpc StreamUsers (StreamRequest) returns (stream UserResponse);  // Server stream
+  rpc Chat (stream ChatMessage) returns (stream ChatMessage);     // Bidirectional
+}
+message UserRequest { string id = 1; }
+message UserResponse { string id = 1; string name = 2; int32 age = 3; }</code></pre><pre><code>// 2. Dependencies
+implementation("io.grpc:grpc-kotlin-stub:1.4.1")
+implementation("io.grpc:grpc-android:1.57.0")
+
+// 3. Create channel and stub
+val channel = ManagedChannelBuilder.forAddress("api.example.com", 443)
+    .useTransportSecurity().build()
+val stub = UserServiceGrpcKt.UserServiceCoroutineStub(channel)
+
+// 4. Unary call (like a REST request)
+val response = stub.getUser(userRequest { id = "123" })
+println(response.name)
+
+// 5. Server streaming
+stub.streamUsers(streamRequest { limit = 100 }).collect { user -&gt;
+    updateUI(user)
+}</code></pre><p><strong>gRPC vs REST:</strong> gRPC wins for inter-service comms (microservices), binary perf, streaming, strongly-typed contracts enforced at build. REST wins for browser clients, caching, human-readable debugging, public APIs.</p></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Server-Sent Events (SSE) — one-way live streaming implementation</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p>SSE streams server-to-client events over a single HTTP connection. Simpler than WebSocket when client doesn't need to send messages.</p><pre><code>// SSE wire format — server sends text/event-stream
+data: {"type":"price","symbol":"AAPL","value":189.50}
+
+data: {"type":"price","symbol":"GOOG","value":141.20}
+
+event: alert
+data: {"message":"Market closed"}
+
+id: 123
+data: {"type":"update"}  // id enables reconnect resume</code></pre><pre><code>// Android — Flow-based SSE client
+fun sseFlow(url: String): Flow&lt;String&gt; = callbackFlow {
+    val request = Request.Builder().url(url)
+        .addHeader("Accept", "text/event-stream")
+        .addHeader("Cache-Control", "no-cache").build()
+    val call = okhttp.newCall(request)
+    call.enqueue(object : Callback {
+        override fun onResponse(call: Call, response: Response) {
+            val source = response.body?.source() ?: return
+            while (!source.exhausted()) {
+                val line = source.readUtf8Line() ?: break
+                if (line.startsWith("data: "))
+                    trySend(line.removePrefix("data: "))
+            }
+            // Reconnect with backoff when server closes
+        }
+        override fun onFailure(call: Call, e: IOException) { close(e) }
+    })
+    awaitClose { call.cancel() }
+}</code></pre><p><strong>SSE vs WebSocket:</strong> SSE is simpler (standard HTTP, proxy-friendly, auto-reconnect via Last-Event-ID). WebSocket needed only when client also sends messages frequently.</p></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Long polling vs short polling — implementation and when to use</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>// Short polling — simple, wastes resources
+suspend fun shortPoll(interval: Long = 5_000L) {
+    while (isActive) {
+        try {
+            val update = api.checkForUpdates()
+            if (update.hasNew) processUpdate(update)
+        } catch (e: Exception) { /* ignore, retry */ }
+        delay(interval)
+    }
+}
+
+// Long polling — server holds request open until data available
+suspend fun longPoll(timeout: Long = 30_000L) {
+    while (isActive) {
+        try {
+            // Server blocks until something happens (or timeout)
+            val response = api.waitForUpdate(timeout = timeout, lastId = lastId)
+            lastId = response.id
+            processUpdate(response)
+            // Immediately re-request — no delay when data arrived
+        } catch (e: TimeoutException) {
+            // Normal — server had nothing, reconnect
+        } catch (e: Exception) {
+            delay(backoff)  // error — backoff before retry
+        }
+    }
+}</code></pre><table><thead><tr><th></th><th>Short Poll</th><th>Long Poll</th><th>WebSocket/SSE</th></tr></thead><tbody><tr><td>Latency</td><td>Up to poll interval</td><td>Near real-time</td><td>Real-time</td></tr><tr><td>Server load</td><td>High (many requests)</td><td>Medium</td><td>Low (persistent)</td></tr><tr><td>Use when</td><td>Simple status checks</td><td>WS blocked by firewall/proxy</td><td>Preferred for real-time</td></tr></tbody></table></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>WebSocket lifecycle — connect, reconnect, state management</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>class WebSocketManager(private val client: OkHttpClient) {
+    private var webSocket: WebSocket? = null
+    private val _messages = MutableSharedFlow&lt;String&gt;()
+    val messages = _messages.asSharedFlow()
+    private var reconnectDelay = 1_000L
+
+    fun connect(url: String, token: String) {
+        val request = Request.Builder().url(url)
+            .addHeader("Authorization", "Bearer $token").build()
+        webSocket = client.newWebSocket(request, object : WebSocketListener() {
+            override fun onOpen(ws: WebSocket, response: Response) {
+                reconnectDelay = 1_000L  // reset on success
+                ws.send("""{"type":"subscribe","channels":["updates"]}""")
+            }
+            override fun onMessage(ws: WebSocket, text: String) {
+                scope.launch { _messages.emit(text) }
+            }
+            override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) {
+                scope.launch {
+                    delay(reconnectDelay)
+                    reconnectDelay = minOf(reconnectDelay * 2, 30_000L)  // cap at 30s
+                    connect(url, token)
+                }
+            }
+        })
+    }
+    fun send(msg: String) = webSocket?.send(msg) ?: false
+    fun close() { webSocket?.close(1000, "done"); webSocket = null }
+}</code></pre></div></div>
+<div class="qa" data-tags="med high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Rate limiting on mobile — reactive (429) and proactive (token bucket)</div><div class="qa-tags"><span class="qa-tag med">L5+</span></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>// Reactive — handle 429 from server
+class RateLimitInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val response = chain.proceed(chain.request())
+        if (response.code == 429) {
+            val retryAfter = response.header("Retry-After")?.toLongOrNull() ?: 60L
+            response.close()
+            Thread.sleep(retryAfter * 1000)
+            return chain.proceed(chain.request())
+        }
+        return response
+    }
+}
+
+// Proactive — token bucket client-side throttle
+class TokenBucket(private val capacity: Int, private val refillRatePerSec: Double) {
+    private var tokens = capacity.toDouble()
+    private var lastRefill = System.currentTimeMillis()
+    @Synchronized fun tryConsume(): Boolean {
+        val now = System.currentTimeMillis()
+        tokens = minOf(capacity.toDouble(), tokens + (now - lastRefill) / 1000.0 * refillRatePerSec)
+        lastRefill = now
+        return if (tokens &gt;= 1.0) { tokens -= 1.0; true } else false
+    }
+}
+
+// Allow 10 req/sec, burst up to 50
+val bucket = TokenBucket(capacity = 50, refillRatePerSec = 10.0)
+if (bucket.tryConsume()) api.call() else queueForLater()</code></pre></div></div>
+<div class="qa" data-tags="med high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>API Gateway and BFF (Backend for Frontend) patterns</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p><strong>API Gateway</strong> — single entry point for all client requests. Handles routing, auth, rate limiting, SSL termination, caching. Your app calls one endpoint; the gateway routes to microservices.</p><p><strong>BFF (Backend for Frontend)</strong> — a dedicated API layer built specifically for mobile. Returns exactly what the app needs — no over/under-fetching.</p><pre><code>// Without BFF — mobile calls each service (expensive, over-fetches)
+api.getUser("123")          // → User Service :8001 — returns 50 fields
+api.getPosts("123")         // → Post Service :8002 — returns 20 fields each
+api.getNotifications("123") // → Notification Service :8003
+// 3 trips, hundreds of fields, mobile uses 10
+
+// With BFF — one call, mobile-optimized payload
+GET /mobile/v1/home/123 → {
+    user: { name, avatar },           // just display fields
+    unread_count: 3,                   // pre-computed
+    featured_content: [...],           // pre-sorted, pre-filtered
+    recent_posts: [...]                // limited to 5 items
+}  // 1 trip, exactly what the screen needs</code></pre><div class="callout"><strong>Samsara/Tesla relevance:</strong> their mobile teams almost certainly have BFF layers — dashboard endpoint returns vehicle status + alerts + map position in one call, pre-joined from 3-4 microservices server-side.</div></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Real-time pattern decision — which to use for each use case</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th>Use case</th><th>Pattern</th><th>Why</th></tr></thead><tbody><tr><td>Chat messages</td><td>WebSocket</td><td>Bidirectional — both sides send</td></tr><tr><td>Live stock prices</td><td>WebSocket or SSE</td><td>Server pushes; SSE if client read-only</td></tr><tr><td>Background push (app killed)</td><td>FCM</td><td>OS-managed, battery-efficient</td></tr><tr><td>File upload progress</td><td>SSE</td><td>Server pushes progress; client already sent file</td></tr><tr><td>Order status tracking</td><td>Long polling or SSE</td><td>Infrequent updates; no need for full WebSocket</td></tr><tr><td>Collaborative editing</td><td>WebSocket + OT/CRDT</td><td>Both sides edit; need conflict resolution</td></tr><tr><td>GPS tracking (active ride)</td><td>WebSocket</td><td>Bidirectional: client sends position, server sends ETAs</td></tr><tr><td>IoT sensor data (Samsara)</td><td>MQTT or UDP</td><td>High volume, some loss OK, constrained devices</td></tr></tbody></table></div></div>
+</section>
+<section class="topic" data-section="OS &amp; Networking Fundamentals" id="osfundamentals"><div class="topic-header"><span class="topic-num">★</span><h2>OS &amp; Networking Fundamentals</h2></div><p class="topic-intro">OSI model, TCP/UDP, HTTP versions, TLS, DNS, semaphores, processes vs threads. The CS theory layer that senior interviews probe. Includes Alexa Voice SDK mapped to OSI layers.</p>
+<div class="qa" data-tags="hot high diagram"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>OSI 7-layer model — what each layer does (with diagram)</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><div class="diagram"><svg viewbox="0 0 520 300" xmlns="http://www.w3.org/2000/svg"><rect fill="#21252F" height="36" rx="5" stroke="#D4A574" width="320" x="10" y="10"></rect><text fill="#D4A574" font-family="Geist" font-size="12" font-weight="600" text-anchor="middle" x="170" y="33">7. Application — HTTP, WebSocket, gRPC, DNS, SMTP</text><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="360" y="33">Data</text><rect fill="#21252F" height="36" rx="5" stroke="#D4A574" width="320" x="10" y="50"></rect><text fill="#D4A574" font-family="Geist" font-size="12" font-weight="600" text-anchor="middle" x="170" y="73">6. Presentation — TLS/SSL, JSON encoding, JPEG</text><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="360" y="73">Data</text><rect fill="#21252F" height="36" rx="5" stroke="#D4A574" width="320" x="10" y="90"></rect><text fill="#D4A574" font-family="Geist" font-size="12" font-weight="600" text-anchor="middle" x="170" y="113">5. Session — auth sessions, connection management</text><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="360" y="113">Data</text><rect fill="#21252F" height="36" rx="5" stroke="#7FB5B5" width="320" x="10" y="130"></rect><text fill="#7FB5B5" font-family="Geist" font-size="12" font-weight="600" text-anchor="middle" x="170" y="153">4. Transport — TCP (reliable), UDP (fast), ports</text><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="360" y="153">Segments</text><rect fill="#21252F" height="36" rx="5" stroke="#7FB5B5" width="320" x="10" y="170"></rect><text fill="#7FB5B5" font-family="Geist" font-size="12" font-weight="600" text-anchor="middle" x="170" y="193">3. Network — IP addressing, routing, packets</text><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="360" y="193">Packets</text><rect fill="#21252F" height="36" rx="5" stroke="#95C97A" width="320" x="10" y="210"></rect><text fill="#95C97A" font-family="Geist" font-size="12" font-weight="600" text-anchor="middle" x="170" y="233">2. Data Link — MAC, Ethernet, WiFi frames</text><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="360" y="233">Frames</text><rect fill="#21252F" height="36" rx="5" stroke="#95C97A" width="320" x="10" y="250"></rect><text fill="#95C97A" font-family="Geist" font-size="12" font-weight="600" text-anchor="middle" x="170" y="273">1. Physical — cables, radio waves, bits</text><text fill="#9CA0AB" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="360" y="273">Bits</text><text fill="#D4A574" font-family="Geist" font-size="11" text-anchor="middle" x="430" y="70">Upper</text><text fill="#D4A574" font-family="Geist" font-size="11" text-anchor="middle" x="430" y="85">Layers</text><text fill="#7FB5B5" font-family="Geist" font-size="11" text-anchor="middle" x="430" y="215">Lower</text><text fill="#7FB5B5" font-family="Geist" font-size="11" text-anchor="middle" x="430" y="230">Layers</text></svg></div><p><strong>Mnemonic (bottom to top):</strong> <em>Please Do Not Throw Sausage Pizza Away</em> (Physical, Data Link, Network, Transport, Session, Presentation, Application)</p><p><strong>Practical Android relevance:</strong> Layer 7 = your Retrofit/OkHttp code. Layer 6 = TLS (OkHttp handles). Layer 4 = TCP socket (OS handles). You code at 7; OS handles 1-4.</p></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Voice SDK / Alexa architecture mapped to OSI layers</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th>OSI Layer</th><th>Alexa Voice SDK mapping</th></tr></thead><tbody><tr><td><strong>7 — Application</strong></td><td>AVS HTTP/2 API — directives and events JSON, capability negotiation, SpeechRecognizer/AudioPlayer namespaces</td></tr><tr><td><strong>6 — Presentation</strong></td><td>OPUS encoding for mic audio, MP3/OPUS for TTS output, multipart HTTP bodies for audio chunks, JSON serialization</td></tr><tr><td><strong>5 — Session</strong></td><td>Persistent HTTP/2 downchannel connection, OAuth2 token management, reconnection logic, keep-alive pings</td></tr><tr><td><strong>4 — Transport</strong></td><td>HTTP/2 over TLS (ALPN negotiated), multiplexed streams for simultaneous audio + directives, flow control</td></tr><tr><td><strong>3 — Network</strong></td><td>IP routing to AVS endpoints (avs.amazon.com), DNS resolution, IPv4/IPv6</td></tr><tr><td><strong>2 — Data Link</strong></td><td>WiFi 802.11 frames or LTE/5G frames, MAC addressing</td></tr><tr><td><strong>1 — Physical</strong></td><td>Radio waves (WiFi/cellular), microphone ADC converting sound to digital PCM</td></tr></tbody></table><div class="callout"><strong>Interview angle:</strong> when asked about your Alexa/voice SDK work, framing it with OSI layers shows you understand the full stack from radio waves to application protocol — a rare depth signal that distinguishes L5 from L4.</div></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>TCP vs UDP — when each is used on mobile</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th></th><th>TCP</th><th>UDP</th></tr></thead><tbody><tr><td>Connection</td><td>Connection-oriented (3-way handshake)</td><td>Connectionless</td></tr><tr><td>Reliability</td><td>Guaranteed delivery, ordering, no duplicates</td><td>Best-effort — packets can be lost or reordered</td></tr><tr><td>Overhead</td><td>Higher (acks, retransmits, flow control)</td><td>Low (8-byte header vs TCP's 20)</td></tr><tr><td>Speed</td><td>Slower (waits for acks)</td><td>Faster (fire and forget)</td></tr><tr><td>Use for</td><td>HTTP/HTTPS, REST APIs, WebSocket, file transfer</td><td>Video streaming, VoIP, live GPS, DNS, gaming</td></tr></tbody></table><p><strong>HTTP/3 uses UDP!</strong> Via QUIC — reimplements reliability on top of UDP, eliminating TCP's head-of-line blocking. OkHttp supports HTTP/3 experimentally.</p><p><strong>Mobile decision:</strong> Real-time voice/video → UDP (slight packet loss better than delay). REST APIs → TCP/HTTPS (correctness required). Samsara IoT telemetry → often UDP + custom reliability (high volume, some loss OK).</p></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>HTTP/1.1 vs HTTP/2 vs HTTP/3 — key differences</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th></th><th>HTTP/1.1</th><th>HTTP/2</th><th>HTTP/3 (QUIC)</th></tr></thead><tbody><tr><td>Transport</td><td>TCP</td><td>TCP</td><td>UDP (QUIC)</td></tr><tr><td>Multiplexing</td><td>❌ 1 request/connection</td><td>✅ Many streams, 1 TCP connection</td><td>✅ Independent streams</td></tr><tr><td>Header compression</td><td>❌ Repeated headers</td><td>✅ HPACK</td><td>✅ QPACK</td></tr><tr><td>Head-of-line blocking</td><td>Per connection</td><td>Per TCP connection</td><td>❌ None</td></tr><tr><td>Connection setup</td><td>1 RTT</td><td>1 RTT + TLS RTT</td><td>0-RTT resume / 1-RTT new</td></tr></tbody></table><p><strong>Head-of-line blocking problem in HTTP/2:</strong> if one TCP packet is lost, ALL streams wait for retransmission. HTTP/3 streams are independent at the QUIC level — one lost packet blocks only that stream.</p><p><strong>Android:</strong> OkHttp supports HTTP/2 automatically. Most Google, Meta, and Cloudflare APIs serve HTTP/2. This is why your app can make many API calls efficiently over one connection.</p></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Semaphore vs Mutex — the critical difference</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th></th><th>Mutex</th><th>Semaphore</th></tr></thead><tbody><tr><td><strong>Ownership</strong></td><td>Only the locker can unlock</td><td>Any thread can signal (release)</td></tr><tr><td><strong>Count</strong></td><td>Binary (locked/unlocked)</td><td>Counting (0 to N)</td></tr><tr><td><strong>Purpose</strong></td><td>Mutual exclusion — protect critical section</td><td>Limit concurrency OR signal between threads</td></tr></tbody></table><pre><code>// Mutex — only one coroutine at a time
+val mutex = kotlinx.coroutines.sync.Mutex()
+mutex.withLock { sharedState++ }  // exclusive
+
+// Semaphore — limit to 4 concurrent DB connections
+val semaphore = kotlinx.coroutines.sync.Semaphore(permits = 4)
+semaphore.withPermit { database.query() }  // max 4 at once
+
+// Binary semaphore — signal between coroutines
+val gate = Semaphore(permits = 0)  // starts closed
+launch { gate.acquire(); processData() }   // waits
+launch { loadData(); gate.release() }      // signals when ready</code></pre><div class="callout"><strong>Analogy:</strong> Mutex = bathroom with one key (same person who took it returns it). Semaphore = parking lot counter (N cars allowed, any car can leave and free a spot).</div></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Process vs Thread vs Coroutine — hierarchy and cost</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th></th><th>Process</th><th>Thread</th><th>Coroutine</th></tr></thead><tbody><tr><td>Memory</td><td>Isolated address space</td><td>Shared heap, own stack (~1MB)</td><td>Stackless (~hundreds of bytes)</td></tr><tr><td>Context switch</td><td>Very expensive (TLB flush)</td><td>Expensive (kernel scheduler)</td><td>Near-zero (function call)</td></tr><tr><td>10,000 concurrent</td><td>~10GB RAM</td><td>~10GB RAM + OS limits</td><td>~few MB</td></tr><tr><td>Communication</td><td>IPC (Binder, pipes)</td><td>Shared memory (sync needed)</td><td>Channels, structured cancellation</td></tr><tr><td>Android example</td><td>App process, SystemServer</td><td>Main, IO, RenderThread</td><td>viewModelScope.launch { }</td></tr></tbody></table><div class="callout"><strong>Key insight:</strong> Coroutines run ON threads. A dispatcher (like Dispatchers.IO) manages which thread(s) coroutines run on. 1000 coroutines can share a pool of 4 IO threads — each suspends instead of blocking when waiting.</div></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Stack vs Heap — what lives where in Android</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th></th><th>Stack</th><th>Heap</th></tr></thead><tbody><tr><td>Contents</td><td>Local variables, method frames, primitive values, object references</td><td>All objects (class instances, arrays)</td></tr><tr><td>Size</td><td>Small (~1-8MB per thread, fixed)</td><td>Large, dynamic (device RAM limit)</td></tr><tr><td>Allocation</td><td>Automatic LIFO — push on call, pop on return</td><td>GC-managed (Android ART)</td></tr><tr><td>Speed</td><td>Extremely fast (pointer move)</td><td>Slower (GC overhead)</td></tr><tr><td>Overflow</td><td>StackOverflowError (infinite recursion)</td><td>OutOfMemoryError (bitmap, large objects)</td></tr></tbody></table><pre><code>fun example() {
+    val x = 42           // x (Int) — on stack
+    val name = "Rutul"  // reference on stack, String object on heap
+    val user = User()   // reference on stack, User object on heap
+}  // x, name, user references popped when method returns
+   // User object on heap is GC-eligible if no other references remain</code></pre></div></div>
+<div class="qa" data-tags="med high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>DNS resolution — what happens before your HTTP request</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p>Before any HTTP request, the OS resolves the hostname to an IP. This adds latency on first connection — typically 20-100ms.</p><ol><li><strong>OS cache check</strong> — recently resolved, TTL still valid → use cached IP</li><li><strong>Router/ISP DNS</strong> — ask network's DNS resolver (e.g., 8.8.8.8)</li><li><strong>Recursive resolution</strong> — DNS resolver queries root → TLD → authoritative server</li><li><strong>Response cached</strong> — stored with TTL from DNS response</li></ol><p><strong>Android DNS behavior:</strong></p><ul><li>Caches per network (switching WiFi clears cache)</li><li>OkHttp caches resolved IPs for connection pool reuse</li><li>Happy eyeballs — tries IPv4 and IPv6 simultaneously, uses faster response</li></ul><p><strong>DNS pre-warming:</strong> force resolve your API endpoints at app start before the first real request needs them — eliminates the DNS latency from cold start.</p></div></div>
+<div class="qa" data-tags="med high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Context switching and OS scheduling — why it matters for mobile</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p><strong>Context switch:</strong> OS pausing one thread and resuming another — saves CPU registers, program counter, stack pointer, then loads the next thread's state. Takes microseconds but adds up with thousands of threads.</p><p><strong>Why Android engineers care:</strong></p><ul><li>Too many threads → too many context switches → CPU overhead → battery drain</li><li>Android limits background process threads system-wide to reduce this</li><li>Coroutines eliminate context switches for waiting work — they SUSPEND instead of blocking, freeing the thread for other coroutines</li></ul><pre><code>// Set thread priority for background work
+Thread {
+    Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND)
+    doHeavyWork()  // lower priority = less scheduling contention
+}.start()
+
+// Coroutine dispatchers handle priority automatically
+// Dispatchers.Main = high priority (UI thread)
+// Dispatchers.IO = bounded pool, lower priority
+// Dispatchers.Default = CPU-count threads for compute</code></pre></div></div>
+<div class="qa" data-tags="high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>TLS handshake — what happens on every HTTPS connection</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p>Every HTTPS connection goes through a TLS handshake before data flows. On mobile, adds ~100-500ms on a fresh connection.</p><ol><li><strong>TCP connect</strong> — 3-way handshake (1 RTT)</li><li><strong>ClientHello</strong> — TLS version, cipher suites, random nonce, SNI (server name)</li><li><strong>ServerHello</strong> — picked cipher, certificate, random nonce</li><li><strong>Certificate validation</strong> — verify chain to trusted CA, hostname match, expiry</li><li><strong>ECDHE key exchange</strong> — both sides compute shared secret without transmitting it</li><li><strong>Session keys derived</strong> — from shared secret + both nonces via HKDF</li><li><strong>Finished</strong> — both verify handshake integrity, encrypted data flows</li></ol><p><strong>Optimizations OkHttp does automatically:</strong></p><ul><li><strong>Session resumption</strong> — skip full handshake on reconnect (0-RTT or 1-RTT)</li><li><strong>Connection pool</strong> — reuse existing TLS connections (keep-alive)</li><li><strong>ALPN</strong> — negotiate HTTP/2 inside the TLS handshake (no extra RTT)</li></ul></div></div>
+</section>
+<section class="topic" data-section="SQL &amp; Database Concepts" id="sql"><div class="topic-header"><span class="topic-num">★</span><h2>SQL &amp; Database Concepts</h2></div><p class="topic-intro">System design rounds always touch databases. ACID, JOINs, indexes, normalization, CAP theorem, N+1 problem — all missing until now. Know when to use SQL vs NoSQL.</p>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>ACID properties — what they are and why they matter</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><p>ACID is the set of guarantees that make database transactions reliable.</p><table><thead><tr><th>Property</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><strong>Atomicity</strong></td><td>All operations succeed or ALL are rolled back. No partial state.</td><td>Bank transfer: debit + credit both happen or neither happens</td></tr><tr><td><strong>Consistency</strong></td><td>Transaction brings DB from one valid state to another. Constraints always hold.</td><td>Balance never goes negative if constrained; foreign keys always valid</td></tr><tr><td><strong>Isolation</strong></td><td>Concurrent transactions don't see each other's intermediate state.</td><td>Two users booking the last seat don't both see it as available</td></tr><tr><td><strong>Durability</strong></td><td>Committed transactions survive crashes. Written to disk via WAL.</td><td>After payment confirmation, server crash doesn't lose the charge</td></tr></tbody></table><p><strong>Isolation levels</strong> (trade isolation for performance):</p><table><thead><tr><th>Level</th><th>Dirty Read</th><th>Non-repeatable Read</th><th>Phantom Read</th></tr></thead><tbody><tr><td>Read Uncommitted</td><td>Possible</td><td>Possible</td><td>Possible</td></tr><tr><td>Read Committed (default PostgreSQL)</td><td>❌</td><td>Possible</td><td>Possible</td></tr><tr><td>Repeatable Read (default MySQL)</td><td>❌</td><td>❌</td><td>Possible</td></tr><tr><td>Serializable</td><td>❌</td><td>❌</td><td>❌ (slowest)</td></tr></tbody></table><div class="callout"><strong>Android/Room:</strong> <code>@Transaction</code> wraps SQL in a SQLite transaction — atomicity guaranteed. SQLite default isolation is Serializable.</div></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Relational vs NoSQL — tradeoffs and when to use each</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th></th><th>Relational (SQL)</th><th>NoSQL</th></tr></thead><tbody><tr><td>Schema</td><td>Fixed — migrations for changes</td><td>Flexible — schema-on-read</td></tr><tr><td>ACID</td><td>Full</td><td>Often BASE (eventually consistent)</td></tr><tr><td>Scaling</td><td>Vertical primary; horizontal via sharding (complex)</td><td>Horizontal — built-in sharding</td></tr><tr><td>Queries</td><td>Powerful JOINs, aggregations</td><td>Limited cross-collection queries</td></tr></tbody></table><p><strong>NoSQL types:</strong></p><table><thead><tr><th>Type</th><th>Examples</th><th>Best for</th></tr></thead><tbody><tr><td>Document</td><td>MongoDB, Firestore</td><td>User profiles, product catalogs, CMS</td></tr><tr><td>Key-Value</td><td>Redis, DynamoDB</td><td>Sessions, caching, rate limiting, leaderboards</td></tr><tr><td>Wide-Column</td><td>Cassandra, HBase</td><td>IoT telemetry, time-series, write-heavy analytics</td></tr><tr><td>Graph</td><td>Neo4j, Neptune</td><td>Social networks, recommendations, fraud detection</td></tr></tbody></table><div class="callout"><strong>Samsara relevance:</strong> GPS telemetry → Cassandra/InfluxDB. Driver profiles → PostgreSQL. Real-time positions → Redis. Most production systems use polyglot persistence (multiple DB types together).</div></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>CAP theorem — consistency vs availability vs partition tolerance</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><p>In any distributed system, when a network partition occurs, you can only guarantee 2 of 3:</p><ul><li><strong>C</strong>onsistency — all nodes see the same data at the same time</li><li><strong>A</strong>vailability — every request gets a response (possibly stale)</li><li><strong>P</strong>artition tolerance — system works despite network splits</li></ul><p><strong>P is non-negotiable</strong> — networks DO fail. Real choice: CP or AP.</p><table><thead><tr><th>Choice</th><th>Behavior on partition</th><th>Examples</th></tr></thead><tbody><tr><td><strong>CP</strong></td><td>Returns error rather than stale data</td><td>HBase, ZooKeeper, PostgreSQL (strong mode)</td></tr><tr><td><strong>AP</strong></td><td>Returns possibly stale data rather than error</td><td>Cassandra, DynamoDB, CouchDB, Redis</td></tr></tbody></table><pre><code>// Mobile implication — your app MUST handle AP backend behavior
+// Optimistic UI: write locally, show immediately, reconcile on next fetch
+val localResult = db.updatePost(post)   // show immediately
+api.updatePost(post).catch { db.revert(post) }  // reconcile</code></pre></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>SQL JOIN types — INNER, LEFT, RIGHT, FULL, CROSS</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>-- INNER JOIN — only rows matching in BOTH tables
+SELECT u.name, p.title
+FROM Users u INNER JOIN Posts p ON u.id = p.user_id
+-- Returns: users who have at least one post
+
+-- LEFT JOIN — ALL left rows, matching right (NULL if none)
+SELECT u.name, p.title
+FROM Users u LEFT JOIN Posts p ON u.id = p.user_id
+-- Returns: ALL users, even those with no posts (p.title = NULL)
+
+-- RIGHT JOIN — all right rows. Rare; prefer LEFT JOIN instead
+
+-- FULL OUTER JOIN — all rows from both, NULLs where no match
+SELECT u.name, p.title
+FROM Users u FULL OUTER JOIN Posts p ON u.id = p.user_id
+
+-- CROSS JOIN — every combination (n*m rows). Used for combos/grids
+SELECT color, size FROM Colors CROSS JOIN Sizes</code></pre><pre><code>// Room equivalent
+@Query("SELECT u.name, p.title FROM User u INNER JOIN Post p ON u.id = p.userId")
+fun getUsersWithPosts(): List&lt;UserWithPost&gt;</code></pre></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Database indexes — B-tree, when to add, when not to</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p>An index is a separate B-tree data structure that stores a sorted copy of column(s) with pointers to full rows. Turns O(n) table scan into O(log n).</p><pre><code>-- Add index on frequently queried column
+CREATE INDEX idx_post_user_id ON posts(user_id);
+-- Now: WHERE user_id = 123 uses index — much faster at scale
+
+-- Composite index — ORDER MATTERS (leftmost prefix rule)
+CREATE INDEX idx_post_user_status ON posts(user_id, status);
+-- Usable: WHERE user_id = 123 AND status = "published"
+-- Usable: WHERE user_id = 123 (leftmost prefix)
+-- NOT usable: WHERE status = "published" alone</code></pre><p><strong>When NOT to index:</strong> small tables (&lt;1000 rows), low cardinality columns (boolean, status with 3 values), write-heavy tables (every write must update all indexes).</p><div class="callout"><strong>Room:</strong> <code>@Entity(indices = [Index(value = ["userId"])])</code>. Always index foreign keys and frequently-queried filter columns. Never index every column.</div></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>N+1 query problem — what it is and how to fix it in Room</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><p>N+1 = 1 query to fetch a list, then N more queries for each item's related data. Causes serious DB overload at scale.</p><pre><code>// ❌ N+1 — 1 query for posts + N queries for authors
+val posts = dao.getAllPosts()           // 1 query
+posts.forEach { post -&gt;
+    val author = dao.getUser(post.userId)  // N queries!
+    display(post, author)
+}
+
+// ✅ Fix 1: JOIN query (single query)
+@Query("SELECT p.*, u.name as authorName FROM Post p JOIN User u ON p.userId = u.id")
+fun getPostsWithAuthors(): List&lt;PostWithAuthor&gt;
+
+// ✅ Fix 2: Room @Relation (2 queries — but second is batched IN)
+data class PostWithAuthor(
+    @Embedded val post: Post,
+    @Relation(parentColumn = "userId", entityColumn = "id")
+    val author: User  // Room fetches all authors in one: SELECT * WHERE id IN (...)
+)
+
+// ✅ Fix 3: Batch IN query manually
+val posts = dao.getAllPosts()
+val userIds = posts.map { it.userId }.distinct()
+val authorsMap = dao.getUsersByIds(userIds).associateBy { it.id }  // 1 query
+posts.forEach { display(it, authorsMap[it.userId]) }</code></pre></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Database normalization — 1NF, 2NF, 3NF in plain terms</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p><strong>1NF:</strong> each column holds atomic (single) values. No repeating groups.</p><pre><code>-- ❌ Violates 1NF
+orders: id=1, products="phone,case,charger"
+-- ✅ 1NF
+order_items: order_id=1, product="phone"
+             order_id=1, product="case"</code></pre><p><strong>2NF:</strong> 1NF + every non-key column depends on the WHOLE primary key. Relevant when PK is composite.</p><pre><code>-- ❌ Violates 2NF: product_name depends only on product_id, not full (order_id, product_id) PK
+order_items: (order_id, product_id) PK, quantity, product_name
+-- ✅ 2NF: split product to its own table
+order_items: (order_id, product_id), quantity
+products: product_id, product_name</code></pre><p><strong>3NF:</strong> 2NF + no transitive dependencies (non-key columns don't depend on other non-key columns).</p><pre><code>-- ❌ Violates 3NF: zip_code → city → state (transitive)
+users: id, zip_code, city, state
+-- ✅ 3NF:
+users: id, zip_code
+zip_codes: zip_code, city, state</code></pre><div class="callout"><strong>Denormalization trade-off:</strong> strict normalization = fewer anomalies, more JOINs. Denormalize intentionally for read performance. Analytics DBs often denormalize heavily (star schema / wide tables).</div></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Query optimization — EXPLAIN, indexes, and slow query patterns</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>-- PostgreSQL EXPLAIN ANALYZE
+EXPLAIN ANALYZE SELECT * FROM posts WHERE user_id = 123 ORDER BY created_at DESC LIMIT 20;
+-- Look for: "Seq Scan" (bad — full scan) vs "Index Scan" (good)
+-- Look for: high estimated rows vs actual rows (statistics stale)
+
+-- SQLite (Room debug)
+EXPLAIN QUERY PLAN SELECT * FROM Post WHERE userId = 123;</code></pre><p><strong>Common slow patterns and fixes:</strong></p><ul><li><code>SELECT *</code> — fetch only columns needed; avoids large row reads</li><li>No index on WHERE column → add index</li><li><code>LIKE '%search%'</code> → leading wildcard kills index; use full-text search (Room FTS4)</li><li><code>WHERE LOWER(email) = x</code> → function on indexed column skips index; store pre-lowercased</li><li><code>OFFSET 10000 LIMIT 20</code> → DB scans 10,020 rows then discards; use keyset pagination instead</li><li>N+1 queries → see dedicated question</li></ul><pre><code>// Room query debugging
+Room.databaseBuilder(ctx, AppDb::class.java, "app.db")
+    .setQueryCallback({ sql, args -&gt;
+        Log.d("SQL", "Query: $sql Args: $args")
+    }, Executors.newSingleThreadExecutor())
+    .build()</code></pre></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Room database transactions — @Transaction and withTransaction</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>@Dao
+interface TransferDao {
+    @Transaction  // Room wraps in SQLite transaction — atomic
+    suspend fun transfer(fromId: String, toId: String, amount: Int) {
+        debit(fromId, amount)
+        credit(toId, amount)
+        logTransfer(fromId, toId, amount)
+        // Any exception here → ALL three ops rolled back
+    }
+
+    @Query("UPDATE Account SET balance = balance - :amount WHERE id = :id")
+    suspend fun debit(id: String, amount: Int)
+
+    @Query("UPDATE Account SET balance = balance + :amount WHERE id = :id")
+    suspend fun credit(id: String, amount: Int)
+}
+
+// Manual transaction for complex logic
+db.withTransaction {
+    val user = userDao.getUser(id)
+    userDao.update(user.copy(points = user.points + 100))
+    auditDao.log("points_added", id, 100)
+    // Committed only if no exception; rollback otherwise
+}</code></pre><div class="callout"><strong>Why @Transaction matters in Room:</strong> without it, two concurrent reads between your two queries could see inconsistent data. With it, they're atomic and isolated.</div></div></div>
+<div class="qa" data-tags="high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Choosing a database — decision guide for mobile backend scenarios</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th>Scenario</th><th>Recommended</th><th>Why</th></tr></thead><tbody><tr><td>User accounts, profiles</td><td>PostgreSQL / MySQL</td><td>Relational, ACID, standard queries</td></tr><tr><td>Auth sessions / tokens</td><td>Redis</td><td>Fast TTL expiry, in-memory speed</td></tr><tr><td>Real-time fleet GPS (Samsara)</td><td>InfluxDB / TimescaleDB</td><td>Time-series optimized, compression</td></tr><tr><td>Chat messages</td><td>Cassandra</td><td>Write-heavy, time-ordered by conversation</td></tr><tr><td>Full-text search</td><td>Elasticsearch / Algolia</td><td>Inverted index, relevance scoring</td></tr><tr><td>Social graph (follows)</td><td>Neo4j or DynamoDB</td><td>Graph traversal or denormalized at scale</td></tr><tr><td>Feature flags / config</td><td>Redis or any K-V</td><td>Low latency reads, simple structure</td></tr><tr><td>Analytics events</td><td>ClickHouse / BigQuery</td><td>Columnar, fast aggregations at scale</td></tr><tr><td>Leaderboards</td><td>Redis Sorted Sets</td><td>O(log n) insert + rank query built-in</td></tr></tbody></table></div></div>
+</section>
+<section class="topic" data-section="TypeScript for React Native" id="typescript"><div class="topic-header"><span class="topic-num">★</span><h2>TypeScript for React Native</h2></div><p class="topic-intro">Critical for Samsara and any RN role. Goes deep beyond the basics: generics, utility types, type narrowing, React component typing, common gotchas for Kotlin engineers.</p>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>TypeScript type system — primitives, interface vs type alias</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><p><strong>Primitives:</strong> <code>string</code>, <code>number</code>, <code>boolean</code>, <code>null</code>, <code>undefined</code>, <code>bigint</code>, <code>symbol</code></p><table><thead><tr><th></th><th>interface</th><th>type alias</th></tr></thead><tbody><tr><td>Extend</td><td>extends (opens for extension)</td><td>&amp; intersection (closed)</td></tr><tr><td>Merge declarations</td><td>✅ Yes (declaration merging)</td><td>❌ No</td></tr><tr><td>Union types</td><td>❌</td><td>✅ type A = X | Y</td></tr><tr><td>Primitive aliases</td><td>❌</td><td>✅ type ID = string</td></tr><tr><td>Use for</td><td>Object shapes, APIs, class contracts</td><td>Unions, primitives, function types, complex types</td></tr></tbody></table><pre><code>interface User { id: string; name: string; }
+interface AdminUser extends User { permissions: string[]; }  // extension
+
+type Status = "loading" | "success" | "error";  // union — must use type
+type UserOrAdmin = User | AdminUser;             // union — must use type
+type ID = string;                                // primitive alias
+type Callback = (result: string) =&gt; void;       // function type</code></pre></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Union types, intersection types, and discriminated unions</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>// Union — value can be one of several types
+type StringOrNumber = string | number;
+function format(val: StringOrNumber): string {
+    if (typeof val === "string") return val.toUpperCase();  // narrowed to string
+    return val.toFixed(2);  // narrowed to number
+}
+
+// Intersection — combine types
+type Employee = Person &amp; { department: string; salary: number; };
+
+// Discriminated union — the key pattern for state machines
+type ApiState&lt;T&gt; =
+    | { status: "idle" }
+    | { status: "loading" }
+    | { status: "success"; data: T }
+    | { status: "error"; message: string };
+
+function render&lt;T&gt;(state: ApiState&lt;T&gt;) {
+    switch (state.status) {
+        case "loading": return &lt;Spinner /&gt;;
+        case "success": return &lt;List data={state.data} /&gt;;  // TS knows data exists
+        case "error":   return &lt;Error msg={state.message} /&gt;;  // TS knows message exists
+        // TS warns if a case is missing!
+    }
+}</code></pre><p><strong>Kotlin equivalent:</strong> <code>sealed class</code> → discriminated union. The <code>when(state)</code> exhaustiveness check works the same way.</p></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>TypeScript generics — functions, interfaces, and constraints</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>// Generic function
+function identity&lt;T&gt;(arg: T): T { return arg; }
+const num = identity&lt;number&gt;(42);  // explicit
+const str = identity("hello");      // inferred — T = string
+
+// Generic with constraint
+function getProperty&lt;T, K extends keyof T&gt;(obj: T, key: K): T[K] {
+    return obj[key];  // type-safe property access
+}
+const name = getProperty({ name: "Rutul", age: 30 }, "name");  // string
+
+// Generic React component (most common in RN)
+interface ListProps&lt;T&gt; {
+    items: T[];
+    renderItem: (item: T) =&gt; React.ReactNode;
+    keyExtractor: (item: T) =&gt; string;
+}
+function TypedList&lt;T&gt;({ items, renderItem, keyExtractor }: ListProps&lt;T&gt;) {
+    return &lt;FlatList data={items} renderItem={({ item }) =&gt; renderItem(item)}
+        keyExtractor={keyExtractor} /&gt;;
+}
+// Usage: &lt;TypedList&lt;User&gt; items={users} renderItem={u =&gt; &lt;UserRow user={u} /&gt;} ... /&gt;</code></pre></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Utility types — Partial, Required, Pick, Omit, Record, ReturnType</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>interface User { id: string; name: string; email: string; age?: number; }
+
+// Partial&lt;T&gt; — all properties optional
+type UserUpdate = Partial&lt;User&gt;;  // { id?: string; name?: string; email?: string; }
+function updateUser(id: string, changes: Partial&lt;User&gt;) { /* ... */ }
+
+// Required&lt;T&gt; — all properties required (opposite of Partial)
+type FullUser = Required&lt;User&gt;;  // age is now required
+
+// Pick&lt;T, K&gt; — take only certain keys
+type UserSummary = Pick&lt;User, "id" | "name"&gt;;  // { id: string; name: string; }
+
+// Omit&lt;T, K&gt; — exclude certain keys
+type PublicUser = Omit&lt;User, "email"&gt;;  // { id: string; name: string; age?: number; }
+
+// Record&lt;K, V&gt; — typed dictionary
+type UserMap = Record&lt;string, User&gt;;  // { [key: string]: User }
+const cache: Record&lt;"loading"|"success"|"error", string&gt; = { loading: "...", success: "ok", error: "fail" };
+
+// ReturnType&lt;T&gt; — infer return type of function
+function getUser() { return { id: "1", name: "Rutul" }; }
+type UserShape = ReturnType&lt;typeof getUser&gt;;  // { id: string; name: string; }
+
+// Readonly&lt;T&gt; — immutable
+const user: Readonly&lt;User&gt; = { id: "1", name: "A", email: "a@b.com" };
+// user.name = "B";  // ❌ Error</code></pre></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Type narrowing and custom type guards</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>// typeof narrowing (primitives)
+function process(val: string | number) {
+    if (typeof val === "string") val.toUpperCase();  // string here
+    else val.toFixed(2);  // number here
+}
+
+// instanceof narrowing (classes)
+function handleEvent(event: MouseEvent | KeyboardEvent) {
+    if (event instanceof KeyboardEvent) console.log(event.key);  // KeyboardEvent
+    else console.log(event.clientX);  // MouseEvent
+}
+
+// in operator narrowing (object shapes)
+type Cat = { meow: () =&gt; void };
+type Dog = { bark: () =&gt; void };
+function makeSound(animal: Cat | Dog) {
+    if ("meow" in animal) animal.meow();  // Cat
+    else animal.bark();  // Dog
+}
+
+// Custom type guard — is keyword
+function isUser(obj: unknown): obj is User {
+    return typeof obj === "object" &amp;&amp; obj !== null &amp;&amp;
+        "id" in obj &amp;&amp; "name" in obj;
+}
+const data: unknown = await api.fetch();
+if (isUser(data)) {
+    console.log(data.name);  // TS knows it's User here
+}</code></pre></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Async/await with TypeScript — Promise typing and error handling</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>// Typed async function
+async function fetchUser(id: string): Promise&lt;User&gt; {
+    const response = await fetch(`/users/${id}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json() as Promise&lt;User&gt;;
+}
+
+// Error handling — TypeScript catch is always unknown
+async function safeLoad() {
+    try {
+        const user = await fetchUser("123");
+        console.log(user.name);  // User is typed
+    } catch (error) {
+        // error is `unknown` in strict mode — must narrow
+        if (error instanceof Error) console.error(error.message);
+        else console.error("Unknown error");
+    }
+}
+
+// Result type pattern (avoids try/catch everywhere)
+type Result&lt;T, E = Error&gt; = { ok: true; data: T } | { ok: false; error: E };
+
+async function safeFetch(id: string): Promise&lt;Result&lt;User&gt;&gt; {
+    try {
+        const data = await fetchUser(id);
+        return { ok: true, data };
+    } catch (error) {
+        return { ok: false, error: error as Error };
+    }
+}
+const result = await safeFetch("1");
+if (result.ok) console.log(result.data.name);
+else console.error(result.error.message);</code></pre></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>TypeScript with React Native — FC, hooks, props, events</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>import React, { useState, useCallback } from "react";
+import { TextInput, TouchableOpacity, View, Text, StyleSheet } from "react-native";
+
+// Typed props
+interface SearchBarProps {
+    placeholder?: string;
+    onSearch: (query: string) =&gt; void;
+    initialValue?: string;
+    style?: ViewStyle;  // from RN — StyleProp&lt;ViewStyle&gt; for nested
+}
+
+// FC = FunctionComponent — includes children prop
+const SearchBar: React.FC&lt;SearchBarProps&gt; = ({ placeholder = "Search...", onSearch, initialValue = "" }) =&gt; {
+    const [query, setQuery] = useState&lt;string&gt;(initialValue);
+
+    const handleSubmit = useCallback(() =&gt; {
+        onSearch(query.trim());
+    }, [query, onSearch]);
+
+    return (
+        &lt;View&gt;
+            &lt;TextInput
+                value={query}
+                onChangeText={(text: string) =&gt; setQuery(text)}  // typed event
+                onSubmitEditing={handleSubmit}
+                placeholder={placeholder}
+            /&gt;
+        &lt;/View&gt;
+    );
+};
+
+// Typed navigation (React Navigation)
+type RootStackParams = {
+    Home: undefined;
+    Detail: { userId: string; showBack: boolean };
+};
+type DetailScreenProp = NativeStackNavigationProp&lt;RootStackParams, "Detail"&gt;;
+
+const DetailScreen: React.FC&lt;{ navigation: DetailScreenProp, route: RouteProp&lt;RootStackParams, "Detail"&gt; }&gt; = ({ route }) =&gt; {
+    const { userId } = route.params;  // typed: string
+};</code></pre></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>TypeScript enums — const enum vs enum vs union literals</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th></th><th>enum</th><th>const enum</th><th>Union literal</th></tr></thead><tbody><tr><td>Runtime object</td><td>✅ Yes</td><td>❌ Inlined at compile</td><td>❌ Type only</td></tr><tr><td>Iterable</td><td>✅</td><td>❌</td><td>❌</td></tr><tr><td>Bundle size</td><td>Larger</td><td>Smallest</td><td>Zero</td></tr><tr><td>Recommended</td><td>❌ Mostly avoid</td><td>🟡 Only if you need enum values by name</td><td>✅ Preferred</td></tr></tbody></table><pre><code>// ❌ Regular enum — compiles to a JS object, harder to tree-shake
+enum Direction { Up = "UP", Down = "DOWN" }
+
+// ✅ Union literal — zero runtime cost, type-safe
+type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT";
+const dir: Direction = "UP";  // only these 4 are valid
+
+// ✅ const object — when you need the values at runtime too
+const DIRECTION = { Up: "UP", Down: "DOWN" } as const;
+type Direction = typeof DIRECTION[keyof typeof DIRECTION];  // "UP" | "DOWN"
+
+// Why avoid regular enum:
+// - Compiles to { "Up": "UP", "UP": "Up", ... } — reverse mapping
+// - Not compatible with eslint @typescript-eslint/no-explicit-any rules
+// - Breaks when using isolatedModules (required in many RN setups)</code></pre></div></div>
+<div class="qa" data-tags="hot high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Common TypeScript gotchas for Kotlin engineers</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>any vs unknown:</strong> <code>any</code> disables type checking completely. <code>unknown</code> is type-safe — must narrow before using. Always prefer <code>unknown</code> for API responses.</li><li><strong>undefined vs null:</strong> TypeScript has both. <code>undefined</code> = declared but not assigned. <code>null</code> = intentionally absent. Use <code>strictNullChecks: true</code> always.</li><li><strong>Non-null assertion (!):</strong> Same risk as Kotlin's <code>!!</code>. <code>user!.name</code> will throw at runtime if user is null. Use narrowing instead.</li><li><strong>as casting:</strong> Not like Kotlin's <code>as</code> — TS doesn't actually verify at runtime. <code>x as User</code> tells the compiler "trust me", no actual conversion. Use type guards instead.</li><li><strong>Structural typing:</strong> TS uses structural (duck) typing. If it has the right shape, it's compatible — no need to explicitly implement interfaces.</li><li><strong>interface merging:</strong> Declaring the same interface twice MERGES them. Kotlin doesn't have this. Can cause unexpected behavior with third-party types.</li><li><strong>Optional chaining:</strong> <code>user?.address?.city</code> — same as Kotlin <code>user?.address?.city</code>. Nullish coalescing: <code>val ?? "default"</code> — like Kotlin's Elvis <code>val ?: "default"</code>.</li></ul><pre><code>// Kotlin  →  TypeScript
+val x: String? = null        →  const x: string | null = null;
+x?.length ?: 0               →  x?.length ?? 0;
+if (x is String) x.length   →  if (typeof x === "string") x.length;
+x!!                          →  x! (same risk, same bad idea)</code></pre></div></div>
+<div class="qa" data-tags="med code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>tsconfig basics — strict mode and key options for React Native</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><pre><code>// tsconfig.json — React Native recommended base
+{
+  "compilerOptions": {
+    "target": "esnext",           // output JS version
+    "module": "commonjs",         // RN uses CommonJS modules
+    "lib": ["esnext"],            // type defs available
+    "jsx": "react-native",        // JSX transform for RN
+    "strict": true,               // enables ALL strict checks below
+    // strict mode enables:
+    "strictNullChecks": true,     // null/undefined separate from other types
+    "noImplicitAny": true,        // can't skip type annotations
+    "strictFunctionTypes": true,  // function param/return type checking
+    "strictPropertyInitialization": true, // class props must be initialized
+    // Other important options:
+    "noUnusedLocals": true,        // catch dead code
+    "noUnusedParameters": true,
+    "baseUrl": ".",               // allows absolute imports from project root
+    "paths": {
+      "@components/*": ["src/components/*"],  // import aliases
+      "@screens/*": ["src/screens/*"]
+    },
+    "moduleResolution": "bundler"  // modern — understands exports field
+  },
+  "extends": "@react-native/typescript-config/tsconfig.json"
+}</code></pre><div class="callout"><strong>Enable strict: true immediately</strong> on new projects. Adding it later to an existing codebase surfaces hundreds of errors. Kotlin devs: strict TS feels like home — similar to Kotlin's default null safety and type inference.</div></div></div>
+</section>
+<section class="topic" data-section="Java for Android Interviews" id="java"><div class="topic-header"><span class="topic-num">★</span><h2>Java for Android Interviews</h2></div><p class="topic-intro">Java fundamentals still tested at senior interviews. Kotlin compiles to JVM bytecode — you encounter Java APIs daily. Focus: differences from Kotlin, generics, collections, threading primitives.</p>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Java vs Kotlin — 10 most important differences</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th>Feature</th><th>Java</th><th>Kotlin</th></tr></thead><tbody><tr><td><strong>Null safety</strong></td><td>NullPointerException at runtime</td><td>Compile-time null checks (?/!!)</td></tr><tr><td><strong>Data classes</strong></td><td>Manual equals/hashCode/toString</td><td>data class generates all</td></tr><tr><td><strong>Default args</strong></td><td>Method overloading</td><td>fun foo(x: Int = 0)</td></tr><tr><td><strong>Extension fns</strong></td><td>Static utility classes</td><td>fun String.cap() = ...</td></tr><tr><td><strong>Coroutines</strong></td><td>Threads/Executors/CompletableFuture</td><td>suspend fun + coroutineScope</td></tr><tr><td><strong>Smart cast</strong></td><td>Manual instanceof + cast</td><td>Automatic after is-check</td></tr><tr><td><strong>Properties</strong></td><td>Fields + getters/setters</td><td>val/var with backing field</td></tr><tr><td><strong>Sealed classes</strong></td><td>Abstract + limited subclasses (manual)</td><td>sealed class enforced by compiler</td></tr><tr><td><strong>Class final-by-default</strong></td><td>Classes open unless final keyword</td><td>Classes final unless open keyword</td></tr><tr><td><strong>String templates</strong></td><td>"Hello " + name</td><td>"Hello $name"</td></tr></tbody></table><div class="callout"><strong>Interview angle:</strong> Kotlin compiles to JVM bytecode — Java and Kotlin are interoperable. A Kotlin data class produces Java-compatible .class files with getters, equals(), hashCode(), etc. You call Kotlin from Java and vice versa seamlessly.</div></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Java generics — type erasure, wildcards, and why they matter</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p><strong>Type erasure:</strong> generic type info is removed at compile time. <code>List&lt;String&gt;</code> and <code>List&lt;Integer&gt;</code> are both <code>List</code> at runtime. This is why you can't do <code>new T()</code> or <code>instanceof List&lt;String&gt;</code>.</p><pre><code>// Wildcards
+void process(List&lt;? extends Number&gt; list) // upper bound — reads as Number
+void add(List&lt;? super Integer&gt; list)      // lower bound — writes Integer
+void print(List&lt;?&gt; list)                  // unknown — read-only, any type
+
+// PECS: Producer Extends, Consumer Super
+// If you read from it (produce) → extends
+// If you write to it (consume) → super</code></pre><p><strong>Kotlin equivalent:</strong> <code>out T</code> = extends (covariant), <code>in T</code> = super (contravariant), <code>*</code> = wildcard. Kotlin handles this at compile time via declaration-site variance — cleaner than Java's use-site wildcards.</p><pre><code>// Kotlin — declaration-site variance
+interface Source&lt;out T&gt; { fun next(): T }  // covariant — T only comes OUT
+interface Sink&lt;in T&gt; { fun put(item: T) }  // contravariant — T only goes IN</code></pre></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Java 8+ features — what you encounter in Android codebases</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p>Android supports Java 8 language features via desugaring (D8/R8). Key features that appear in Android code:</p><pre><code>// Lambda expressions
+Runnable r = () -&gt; System.out.println("hello");
+list.sort((a, b) -&gt; a.compareTo(b));
+
+// Method references
+list.forEach(System.out::println);  // instance method ref
+Stream.of("a","b").map(String::toUpperCase); // static ref
+
+// Stream API (Android supports via desugaring)
+List&lt;String&gt; filtered = names.stream()
+    .filter(n -&gt; n.startsWith("A"))
+    .sorted()
+    .collect(Collectors.toList());
+
+// Optional — avoid null returns
+Optional&lt;String&gt; name = Optional.ofNullable(getName());
+name.ifPresent(n -&gt; show(n));
+String result = name.orElse("default");
+
+// Default interface methods
+interface Greeter {
+    String greet(String name);
+    default String greetAll(List&lt;String&gt; names) {
+        return names.stream().map(this::greet).collect(Collectors.joining(", "));
+    }
+}</code></pre><div class="callout"><strong>Android note:</strong> Java Stream API available from API 24+ via desugaring. Kotlin's standard library collections (map, filter, forEach) achieve the same on all API levels — prefer those in new code.</div></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Java inner classes — static nested vs inner vs anonymous vs local</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th>Type</th><th>Holds outer ref?</th><th>Use for</th></tr></thead><tbody><tr><td><strong>Static nested</strong></td><td>❌ No</td><td>Logically grouped helpers (Builder classes, ViewHolder)</td></tr><tr><td><strong>Inner class</strong></td><td>✅ Yes — memory leak risk!</td><td>Needs outer state. Avoid in Android — use static + WeakReference</td></tr><tr><td><strong>Anonymous</strong></td><td>✅ Yes (if non-static context)</td><td>One-off callbacks (deprecated with lambdas/coroutines)</td></tr><tr><td><strong>Local</strong></td><td>✅ Captures effectively-final vars</td><td>Rarely used — prefer lambdas</td></tr></tbody></table><pre><code>// ❌ Inner class memory leak — holds Activity reference
+public class MyActivity extends Activity {
+    class MyHandler extends Handler {  // holds Activity implicitly
+        public void handleMessage(Message msg) { ... }
+    }
+}
+
+// ✅ Static nested — safe
+public class MyActivity extends Activity {
+    static class MyHandler extends Handler {
+        WeakReference&lt;MyActivity&gt; ref;
+        MyHandler(MyActivity a) { ref = new WeakReference&lt;&gt;(a); }
+    }
+}</code></pre></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Java exception hierarchy — checked vs unchecked</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p>Java has two branches: <strong>checked</strong> (must declare or catch) and <strong>unchecked</strong> (runtime errors, no requirement).</p><pre><code>Throwable
+├── Error             — JVM problems (OutOfMemoryError, StackOverflow)
+│                       Do NOT catch normally
+└── Exception
+    ├── RuntimeException — UNCHECKED (bugs: NullPointer, IndexOutOfBounds,
+    │                       IllegalArgument, ClassCast)
+    └── IOException      — CHECKED (must declare: FileNotFoundException,
+                            SQLException, ClassNotFoundException)</code></pre><p><strong>Rule:</strong> checked exceptions = caller must handle (IO, network, DB). Unchecked = programmer errors that shouldn't occur.</p><p><strong>Kotlin difference:</strong> Kotlin has NO checked exceptions. All exceptions are unchecked. Java interop: <code>@Throws(IOException::class)</code> on Kotlin functions tells Java callers to handle it.</p><pre><code>// Kotlin — no checked exceptions
+suspend fun readFile(): String {  // no throws declaration needed
+    return File("path").readText()  // IOException is unchecked in Kotlin
+}
+
+// For Java callers:
+@Throws(IOException::class)
+fun javaFriendlyRead(): String = File("path").readText()</code></pre></div></div>
+<div class="qa" data-tags="hot high"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Java Collections — which implementation when</div><div class="qa-tags"><span class="qa-tag hot">🔥</span></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th>Interface</th><th>Implementation</th><th>Ordered?</th><th>Unique?</th><th>Use for</th></tr></thead><tbody><tr><td>List</td><td>ArrayList</td><td>✅ insertion</td><td>❌</td><td>General-purpose list, O(1) get by index</td></tr><tr><td>List</td><td>LinkedList</td><td>✅ insertion</td><td>❌</td><td>Frequent insert/delete at middle; also as Queue/Deque</td></tr><tr><td>Set</td><td>HashSet</td><td>❌</td><td>✅</td><td>O(1) add/contains/remove; no order needed</td></tr><tr><td>Set</td><td>LinkedHashSet</td><td>✅ insertion</td><td>✅</td><td>Unique + insertion order preserved</td></tr><tr><td>Set</td><td>TreeSet</td><td>✅ sorted</td><td>✅</td><td>Sorted unique elements, range queries</td></tr><tr><td>Map</td><td>HashMap</td><td>❌</td><td>keys</td><td>O(1) get/put; most common</td></tr><tr><td>Map</td><td>LinkedHashMap</td><td>✅ insertion</td><td>keys</td><td>LRU cache (override removeEldestEntry), ordered iteration</td></tr><tr><td>Map</td><td>TreeMap</td><td>✅ key sorted</td><td>keys</td><td>Range queries, floor/ceiling ops</td></tr><tr><td>Queue</td><td>PriorityQueue</td><td>priority</td><td>❌</td><td>Min/max heap; top-K problems</td></tr><tr><td>Deque</td><td>ArrayDeque</td><td>✅</td><td>❌</td><td>Stack + Queue; faster than Stack class</td></tr></tbody></table><div class="callout"><strong>Kotlin note:</strong> Kotlin's <code>listOf()</code> returns an unmodifiable Java List. <code>mutableListOf()</code> returns ArrayList. <code>mapOf()</code> returns LinkedHashMap under the hood (insertion-ordered).</div></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>equals() and hashCode() contract — why both must be overridden together</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p>The contract: <strong>if a.equals(b) is true, then a.hashCode() must equal b.hashCode()</strong>.</p><p>Breaking this contract causes bugs in HashMaps and HashSets — objects that are "equal" end up in different buckets and can't be found.</p><pre><code>// ❌ Overrides equals but not hashCode — breaks HashMap
+class Point(val x: Int, val y: Int) {
+    override fun equals(other: Any?) =
+        other is Point &amp;&amp; x == other.x &amp;&amp; y == other.y
+    // Missing hashCode! Two equal Points → different hash buckets!
+}
+
+val map = HashMap&lt;Point, String&gt;()
+map[Point(1,2)] = "A"
+println(map[Point(1,2)])  // null!! — different hashCode used for lookup
+
+// ✅ Override both
+class Point(val x: Int, val y: Int) {
+    override fun equals(other: Any?) = other is Point &amp;&amp; x == other.x &amp;&amp; y == other.y
+    override fun hashCode() = Objects.hash(x, y)
+}
+
+// Kotlin data class handles this automatically — use data class
+data class Point(val x: Int, val y: Int)  // equals + hashCode + copy + toString</code></pre></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Comparable vs Comparator — when to use each</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><ul><li><strong>Comparable</strong> — the class defines its OWN natural ordering. Implement <code>compareTo()</code>. Single default sort order per class.</li><li><strong>Comparator</strong> — external sorting logic. Multiple orderings for the same class. Pass as lambda to sort functions.</li></ul><pre><code>// Comparable — natural order IS part of the class definition
+class Employee(val name: String, val salary: Int) : Comparable&lt;Employee&gt; {
+    override fun compareTo(other: Employee) = this.salary.compareTo(other.salary)
+}
+employees.sort()  // uses natural order (by salary)
+
+// Comparator — external, multiple orderings
+val byName = Comparator&lt;Employee&gt; { a, b -&gt; a.name.compareTo(b.name) }
+val bySalaryDesc = compareByDescending&lt;Employee&gt; { it.salary }
+
+employees.sortWith(byName)
+employees.sortedWith(bySalaryDesc)
+
+// Kotlin shorthand
+employees.sortedBy { it.name }         // ascending
+employees.sortedByDescending { it.salary }  // descending
+employees.sortedWith(compareBy({ it.dept }, { it.name }))  // multi-key</code></pre></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Java threading primitives — synchronized, wait/notify, volatile</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><p><strong>synchronized:</strong> intrinsic lock — one thread at a time in the block. Uses object's monitor.</p><pre><code>// Synchronized method
+synchronized fun increment() { count++ }
+
+// Synchronized block (finer granularity)
+fun process() {
+    synchronized(lockObject) { /* critical section */ }
+    // other work continues outside lock
+}
+
+// wait/notify — thread coordination
+synchronized fun waitForData() {
+    while (queue.isEmpty()) wait()  // releases lock, waits
+    processNext()
+}
+synchronized fun addData(item: T) {
+    queue.add(item)
+    notify()  // wake one waiting thread
+    // notifyAll() — wake all waiting threads
+}</code></pre><p><strong>volatile:</strong> ensures visibility across threads (write immediately visible to all readers). Does NOT guarantee atomicity.</p><pre><code>@Volatile var running = true  // Kotlin @Volatile = Java volatile
+// One thread writes: running = false
+// Other threads see the update immediately (no CPU cache)</code></pre><div class="callout"><strong>Modern Android:</strong> prefer coroutines + Mutex over raw synchronized/wait/notify. Java threading primitives are lower-level and more error-prone. Know them for interviews; use coroutines in production.</div></div></div>
+<div class="qa" data-tags="high code"><div class="qa-header"><div class="qa-q"><span class="qmark">Q.</span>Java memory — strong, soft, weak, and phantom references</div><div class="qa-tags"></div><span class="toggle">+</span></div><div class="qa-body"><table><thead><tr><th>Type</th><th>GC behavior</th><th>Use for</th></tr></thead><tbody><tr><td><strong>Strong</strong></td><td>Never collected while referenced</td><td>Normal references — everything</td></tr><tr><td><strong>Soft</strong></td><td>Collected only when JVM needs memory</td><td>Memory-sensitive caches (image cache)</td></tr><tr><td><strong>Weak</strong></td><td>Collected at next GC regardless</td><td>Caches where stale is OK; avoiding retain cycles (WeakReference to Activity)</td></tr><tr><td><strong>Phantom</strong></td><td>Already finalized; for cleanup actions</td><td>Pre-mortem cleanup notification (rarely used)</td></tr></tbody></table><pre><code>// WeakReference — Android classic pattern to avoid memory leaks
+class MyHandler(activity: MainActivity) : Handler(Looper.getMainLooper()) {
+    private val ref = WeakReference(activity)
+    override fun handleMessage(msg: Message) {
+        ref.get()?.updateUI()  // null if Activity was GC'd
+    }
+}
+
+// SoftReference — in-memory image cache
+val cache = HashMap&lt;String, SoftReference&lt;Bitmap&gt;&gt;()
+fun getBitmap(key: String): Bitmap? = cache[key]?.get()  // null if GC'd under pressure
+fun putBitmap(key: String, bmp: Bitmap) { cache[key] = SoftReference(bmp) }</code></pre></div></div>
 </section><section class="topic" data-section="Behavioral" id="behavioral">
 <div class="topic-header"><span class="topic-num">19</span><h2>Behavioral / STAR</h2></div>
 <p class="topic-intro">Underrated at L5. Strong technical with weak behavioral = no offer. Your STAR story bank should cover every Amazon LP.</p>
@@ -7920,13 +9499,79 @@ launch(Dispatchers.Default) {
   }, { rootMargin: '-30% 0px -60% 0px' });
   sections.forEach(s => observer.observe(s));
 
-  // --- Mobile menu ---
-  const menuBtn = document.getElementById('menuBtn');
-  const toc = document.getElementById('toc');
-  if (menuBtn) {
-    menuBtn.addEventListener('click', () => toc.classList.toggle('open'));
-    tocLinks.forEach(l => l.addEventListener('click', () => toc.classList.remove('open')));
+  // --- TOC toggle (desktop + mobile) ---
+  const menuBtn    = document.getElementById('menuBtn');
+  const tocPin     = document.getElementById('tocPin');
+  const toc        = document.getElementById('toc');
+  const overlay    = document.getElementById('tocOverlay');
+  const container  = document.getElementById('mainContainer');
+  const backTop    = document.getElementById('backTop');
+  const isMobile   = () => window.innerWidth <= 900;
+
+  // Restore desktop TOC state
+  if (!isMobile()) {
+    const saved = localStorage.getItem('tocCollapsed');
+    if (saved === 'true') {
+      container.classList.add('toc-collapsed');
+      tocPin.textContent = '▶';
+    }
   }
+
+  // Desktop pin toggle
+  if (tocPin) {
+    tocPin.addEventListener('click', () => {
+      if (isMobile()) {
+        toc.classList.toggle('open');
+        overlay.classList.toggle('active');
+      } else {
+        container.classList.toggle('toc-collapsed');
+        const collapsed = container.classList.contains('toc-collapsed');
+        tocPin.textContent = collapsed ? '▶' : '◀';
+        localStorage.setItem('tocCollapsed', collapsed);
+      }
+    });
+  }
+
+  // Mobile hamburger
+  if (menuBtn) {
+    menuBtn.addEventListener('click', () => {
+      toc.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  // Close on overlay click
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      toc.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+  // Close TOC on link click (mobile)
+  tocLinks.forEach(l => l.addEventListener('click', () => {
+    if (isMobile()) {
+      toc.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+  }));
+
+  // Back to top
+  if (backTop) {
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
+
+  // Update pin position when window resizes
+  window.addEventListener('resize', () => {
+    if (!isMobile()) {
+      toc.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+  });
+
 })();
 </script>
 </body>
